@@ -1,1 +1,6 @@
-
+** package instal
+  #+begin_src emacs-lisp
+    (require 'package)
+** config using use-package
+  #+begin_src emacs-lisp
+    
