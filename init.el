@@ -4,5 +4,10 @@
 ;;ensure (package-initialize) is called early-before any org-related functions or code blocks in your init.org
 ;;straight.el > add this "bootstrapping"script
 ;; (straight-use-package 'evil)
+;;disable splash screen and startup message
+;;(setq inhibit-startup-message t) 
+;; (setq initial-scratch-message nil)
+;;package-vc-install function to install packages from github
+
 
 
