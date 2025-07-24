@@ -1,3 +1,16 @@
+;; (eval-and-compile
+;;   (require 'package)
+;;   (setq package-archives '(("elpa" . "https://elpa.gnu.org/packages/")
+;;                            ("marmalade" . "https://marmalade-repo.org/packages/")
+;;                            ("melpa" . "https://melpa.org/packages/")))
+;;   (package-initialize)
+;;   ;; i always fetch the archive contents on startup and during compilation, which is slow
+;;   (package-refresh-contents)
+;;   (unless (package-installed-p 'use-package)
+;;     (package-install 'use-package))
+;;   (require 'use-package)
+;;   ;; i don't really know why this isn't the default...
+;;   (setf use-package-always-ensure t))
 ;;create init.org --> create emacs-init.el
 ;;(require 'org)
 ;;(org-babel-load-file (expand-file-name "init.org" user-emacs-directory ;replace user-emacs-directory with actual path to your init.org
