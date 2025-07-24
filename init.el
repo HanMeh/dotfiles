@@ -27,6 +27,14 @@
 ;; (require 'package)
 ;; (add-to-list 'package-archives
 ;;              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+;; https://jwiegley.github.io/use-package/installation/
+;; (add-to-list 'load-path "~/.emacs.d/site-lisp/use-package")
+;; (require 'use-package)
+
+;; (with-eval-after-load 'info
+;;   (info-initialize)
+;;   (add-to-list 'Info-directory-list
+;;                "~/.emacs.d/site-lisp/use-package/"))
 
 
 
