@@ -19,6 +19,14 @@
 ;;     (("gnu" . "https://elpa.gnu.org/packages/")
 ;;      ("melpa" . "https://melpa.org/packages/")))))
 ;; (package-initialize)
+;; To use Melpa:
+;; (require 'package)
+;; (add-to-list 'package-archives
+;;              '("melpa" . "https://melpa.org/packages/") t)
+;; To use Melpa-Stable:
+;; (require 'package)
+;; (add-to-list 'package-archives
+;;              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 
 
 
