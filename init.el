@@ -1,5 +1,78 @@
+;; ~/.config/emacs/init.el: This location aligns with the XDG Base Directory Specification, common in Linux environments, and is supported by Emacs 27 and later.
+;;;; External Packages
 
+(require 'package)
 
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+
+(setq package-archive-priorities '(("gnu" . 30)
+                                   ("nongnu" . 25)
+                                   ("melpa-stable" . 20)
+                                   ("melpa" . 10)))
+
+(use-package exec-path-from-shell
+  :demand
+  :init
+  (exec-path-from-shell-initialize))
+
+---------------------------------
+;; Then add one of the archives to package-archives:
+;; To use Melpa:
+
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
+;; To use Melpa-Stable:
+
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+
+;; Once you have added your preferred archive, you need to update the local package list using:
+
+;; M-x package-refresh-contents RET
+;; Once you have done that, you can install use-package and its dependencies using:
+
+;; M-x package-install RET use-package RET
+
+----------------------------------
+(use-package foo
+  :defer t
+  :init
+  (add-hook 'some-hook 'foo-mode))
+;; This is better, as foo is now only loaded when it is actually needed (that is, when the hook some-hook is run).
+(use-package foo
+  :hook some-hook)
+;; which also implies :defer t. The above is thereby reduced down to
+----------------------------------
+(add-to-list 'load-path "/path/to/guru-mode/directory")
+(require 'guru-mode)
+(guru-mode +1) 
+;; to enable in all buffers
+----------------------------------
+;; Combining use-package with package.el is actually very simple—y entire setup is based on this combination—but it's much better to let package.el actually to its job. Just initialise package.el at the very beginning of your init file:
+
+(require 'package)
+(setq package-enable-at-startup nil)   ; To prevent initialising twice
+(add-to-list 'package-archives '("melpa" . "https://stable.melpa.org/packages/"))
+
+(package-initialize)
+;; For convenience you may subsequently want to bootstrap use-package, if it's not already installed:
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+;; This let's you start an Emacs session on a fresh system, and your init.el will automatically install use-package.
+
+;; Ultimately you need to load use-package:
+
+(eval-when-compile
+  (require 'use-package))
+----------------------------------
+Execute M-x package-install RET rust-mode RET.
+Add (require 'rust-mode) to your init.el.
 ----------------------------------
 (use-package package
   :ensure nil
@@ -665,6 +738,17 @@ If you experience freezing, decrease this. If you experience stuttering, increas
   :config
   (add-to-list 'eglot-stay-out-of 'flymake))
 
+--------------------------------------------------------------
+
+;; After installing Eglot, e.g. via M-x package-install (not needed from Emacs 29), you can enable it via the M-x eglot command or load it automatically in rust-mode via
+
+(add-hook 'rust-mode-hook 'eglot-ensure)
+;; To enable clippy, you will need to configure the initialization options to pass the check.command setting.
+
+
+(add-to-list 'eglot-server-programs
+             '((rust-ts-mode rust-mode) .
+               ("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
 --------------------------------------------------------------
 
 
