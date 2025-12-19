@@ -1,5 +1,140 @@
-;; ~/.config/emacs/init.el: This location aligns with the XDG Base Directory Specification, common in Linux environments, and is supported by Emacs 27 and later.
+;; ~/.config/emacs/init.el: This location aligns with the XDG Base Directory Specification,
+;;  common in Linux environments, and is supported by Emacs 27 and later.
 ;;;; External Packages
+----------------------------------------------------------------------------------
+;; check_list
+;; major modes
+;; rust-ts-mode
+;; rust-mode
+;; rustic-mode
+
+(use-package smartparens :ensure t
+  :config (require 'smartparens-rust))
+
+(defun sp1ff/rust/mode-hook ()
+  "My rust-mode hook"
+
+  (column-number-mode)
+  (display-line-numbers-mode)
+  (hs-minor-mode)
+  (smartparens-mode)
+  (define-key rust-mode-map "\C-ca" 'eglot-code-actions)
+  (define-key rust-mode-map (kbd "C-<right>")   'sp-forward-slurp-sexp)
+  (define-key rust-mode-map (kbd "C-<left>")    'sp-forward-barf-sexp)
+  (define-key rust-mode-map (kbd "C-M-<right>") 'sp-backward-slurp-sexp)
+  (define-key rust-mode-map (kbd "C-M-<left>")  'sp-backward-barf-sexp)
+  (define-key rust-mode-map "\C-c>" 'hs-show-all)
+  (define-key rust-mode-map "\C-c<" 'hs-hide-all)
+  (define-key rust-mode-map "\C-c;" 'hs-toggle-hiding)
+  (define-key rust-mode-map "\C-c'" 'hs-hide-level)
+  (setq indent-tabs-mode nil
+        tab-width 4
+        c-basic-offset 4
+        fill-column 100))
+
+(use-package rust-mode
+  :ensure t
+  :hook (rust-mode . sp1ff/rust/mode-hook)
+  :config
+  (let ((dot-cargo-bin (expand-file-name "~/.cargo/bin/")))
+    (setq rust-rustfmt-bin (concat dot-cargo-bin "rustfmt")
+          rust-cargo-bin (concat dot-cargo-bin "cargo")
+          rust-format-on-save t)))
+
+(use-package clippy-flymake
+  :vc (:url "https://git.sr.ht/~mgmarlow/clippy-flymake" :branch main)
+  :hook (rust-mode . clippy-flymake-setup-backend))
+
+(defun clippy-flymake-manually-activate-flymake ()
+  "Shim for working around eglot's tendency to suppress flymake backends."
+  (add-hook 'flymake-diagnostic-functions #'eglot-flymake-backend nil t)
+  (flymake-mode 1))
+
+;; `eglot' by default will suppress all other flymake backends than its own
+;; <https://github.com/joaotavora/eglot/issues/268> This workaround will
+;; add `flymake-clippy'
+(use-package eglot
+  :ensure t
+  :hook ((rust-mode . eglot-ensure)
+         (eglot-managed-mode . clippy-flymake-manually-activate-flymake))
+  :config
+  (add-to-list 'eglot-stay-out-of 'flymake))
+-------------------------------------------------------------------------------------------          
+
+(use-package cargo-mode)
+(use-package rustic
+  :ensure
+  :hook ((rustic-mode . (lambda () (setq indent-tabs-mode nil)))
+         (rustic-mode . prettify-symbols-mode)
+         (rustic-mode . eglot-ensure)
+         (eglot--managed-mode . (lambda () (flymake-mode -1)))
+         (rustic-mode . cargo-minor-mode))
+  :bind (:map rustic-mode-map
+              ("M-j" . eglot-menu)
+              ("C-c C-c l" . flycheck-list-errors)
+              ("C-c C-c C-a" . eglot-code-action-quickfix)
+              ("C-c C-c r" . eglot-rename)
+              ("C-c C-c q" . eglot-reconnect))
+  :config
+  ;; comment to disable rustfmt on save
+  (setq rustic-compile-display-method 'pop-to-buffer)
+  (setq rustic-format-on-save nil)
+  (setq rustic-lsp-client 'eglot))
+(use-package eglot
+  :bind (:map eglot-mode-map
+              ("C-c C-l r" . eglot-rename)
+              ("C-c C-l = =" . eglot-format)
+              ("C-c C-l d" . eldoc)
+              ("C-c C-l a" . eglot-code-actions))
+  :custom
+  (eglot-events-buffer-size 0) ; Disable event logging for performance
+  (eglot-sync-connect nil) ; Don't block on connection
+  (eglot-ignored-server-capabilites '(:documentOnTypeFormattingProvider))
+  :config
+  (add-to-list 'eglot-stay-out-of 'flymake)
+  (add-to-list 'eglot-stay-out-of 'flycheck)
+  (add-to-list 'eglot-stay-out-of 'company))
+(use-package company
+  :ensure
+  :hook ((prog-mode . company-mode)
+         (web-mode . company-mode))
+  :custom
+  (company-idle-delay 0.5) ;; how long to wait until popup
+  ;; (company-begin-commands nil) ;; uncomment to disable popup
+  :bind
+  (:map company-active-map
+        ("C-j". company-select-next)
+        ("C-k". company-select-previous)
+        ("<tab>" . company-complete-selection)
+        ("RET" . evil-ret-and-indent)
+        ("<return>" . evil-ret-and-indent)
+        ))
+(use-package company-box
+  :hook (company-mode . company-box-mode))
+(use-package magit
+  :after with-editor
+  :hook (magit-mode . magit-wip-mode)
+  :bind ("C-x g" . magit-status))
+(use-package forge
+  :after magit)
+(use-package with-editor
+  :after magit)
+(use-package smartparens
+  :hook ((prog-mode . smartparens-mode)
+         (prog-mode . electric-pair-mode)))
+(use-package projectile
+  :ensure t
+  :commands projectile-project-root
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :custom
+  (projectile-per-project-compilation-buffer nil)
+  :config
+  (projectile-global-mode)
+  (setq frame-title-format '(:eval (if (projectile-project-root)
+                                       (projectile-project-root) "%b"))))
+-------------------------------------------------------------------------------
+
 
 (require 'package)
 
