@@ -1,3 +1,6 @@
+;; dd --list
+;; umount /dev/sdX*
+;; # dd if=/path/to/image.iso of=/dev/sdX bs=8M status=progress oflag=direct
 ;; ~/.config/emacs/init.el: This location aligns with the XDG Base Directory Specification,
 ;;  common in Linux environments, and is supported by Emacs 27 and later.
 ;;;; External Packages
