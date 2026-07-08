@@ -1,121 +1,5 @@
-;; emacs --daemon
-emacsclient -t(or -nw)
-
-;; ~/.config/emacs/init.el
-
-;; rustup component add rust-analyzer.
-
-(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                         ("melpa" . "https://melpa.org/packages/")))
-
-;; Initialize package system
-(package-refresh-contents) ;; Only needed the first time to fetch package lists
-(package-install 'use-package)
-
-;; Enable use-package
-(eval-when-compile
-  (require 'use-package))
-
-;; Configure Rustic mode (recommended over rust-mode)
-(use-package rustic
-  :ensure t
-  :config
-  (defun my/rustic-mode-hook ()
-    (setq indent-tabs-mode nil) ;; Use spaces for indentation
-    (lsp-deferred)             ;; Start LSP asynchronously
-    (if (featurep 'yasnippet)  ;; Optional: enable snippets if you use yasnippet
-        (yas-minor-mode)))
-  :hook
-  (rustic-mode . my/rustic-mode-hook))
-
-;; Configure LSP mode (provides language server support)
-(use-package lsp-mode
-  :ensure t
-  :commands (lsp lsp-deferred)
-  :init
-  (setq lsp-keymap-prefix "C-c l") ;; Set a prefix for LSP keybindings
-  :config
-  (lsp-mode 1))
-
-;; Optional: Add packages for better LSP experience
-(use-package lsp-ui
-  :ensure t
-  :after lsp-mode
-  :config
-  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
-
-(use-package flycheck
-  :ensure t
-  :after lsp-mode
-  :config
-  (add-hook 'lsp-mode-hook 'flycheck-mode)) ;; Use flycheck with lsp-mode
-
-;; Configure Cargo commands (provides build/run/test shortcuts)
-(use-package cargo
-  :ensure t
-  :hook
-  (rustic-mode . cargo-minor-mode)) ;; Automatically enable cargo minor mode in rustic mode
-
-;; Magit: The best Git porcelain for Emacs
-(use-package magit
-  :ensure t
-  :bind
-  ("C-x g" . magit-status))
-
-;; Projectile: Project management
-(use-package projectile
-  :ensure t
-  :config
-  (projectile-mode +1)
-  :bind
-  ("C-c p" . projectile-command-map))
-
-;; Yasnippet: Code snippets
-(use-package yasnippet
-  :ensure t
-  :config
-  (yas-global-mode 1))
-
-===========================================================================================
 
 
-
-
-
-(setq package-enable-at-startup nil
-      inhibit-startup-message   t
-      frame-resize-pixelwise    t  ; fine resize
-      package-native-compile    t) ; native compile packages
-(scroll-bar-mode -1)               ; disable scrollbar
-(tool-bar-mode -1)                 ; disable toolbar
-(tooltip-mode -1)                  ; disable tooltips
-(set-fringe-mode 10)               ; give some breathing room
-(menu-bar-mode -1)                 ; disable menubar
-(blink-cursor-mode 0)              ; disable blinking cursor
-
-
-
-
-
-
-
-
-
-
-================================================================================================
-;; XDG-compatible ~/.config/emacs/init.el.
-;; Configure package sources
-(setq package-archives '(("gnu" . "http://mirrors.163.com/elpa/gnu/")
-                         ("melpa" . "https://melpa.org/packages/")
-                         ("org" . "http://orgmode.org/elpa/")))
-
-;; Bootstrap use-package: Install it if it's not already present
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-;; Enable use-package-always-ensure to automatically install packages
-(setq use-package-always-ensure t)
 
 ;; Basic rust-mode configuration
 (use-package rust-mode
@@ -125,101 +9,9 @@ emacsclient -t(or -nw)
               ("C-c C-c C-r" . rust-run)   ;; Run the current Rust program
               ("C-c C-c C-b" . rust-compile) ;; Compile the current Rust program
               ("C-c C-c C-t" . rust-test))  ;; Test the current Rust project
-  :config
-  ;; Additional configuration can go here. For example, enabling tree-sitter:
-  (setq rust-mode-treesitter-derive t))
-  ;; Configuration for TOML files (Cargo.toml)
-(use-package toml-mode)
-
-;; Configuration for Cargo integration
-(use-package cargo
-  :hook (rust-mode . cargo-minor-mode))
-
-;; Example for using Eglot (requires the rust-analyzer LSP server installed on your system)
-(use-package eglot
-  :hook ((rust-mode . eglot-ensure)
-         (before-save . eglot-format-buffer))
-  :config
-  ;; Ensure rust-analyzer uses the correct project root
-  (add-to-list 'eglot-server-programs '((rust-mode) "rust-analyzer"))
-  ;; Other Eglot configurations...
-  )
 
 
-  ==========================================
-  (use-package rust-mode
-  :ensure t
-  :mode "\\.rs\\'"
-  :init
-  (setq rust-format-on-save t))
 
-(use-package rust-mode
-  :ensure t
-  :mode "\\.rs\\'"
-  :hook (rust-mode . eglot-ensure)
-  :config
-  (setq rust-format-on-save t))
-
-(use-package cargo
-  :ensure t
-  :hook (rust-mode . cargo-minor-mode))
-
-(use-package rustic
-  :ensure t
-  :config
-  (setq rustic-format-on-save t))
-========================================
-(use-package rust-ts-mode
-  :mode "\\.rs\\'"
-  :init
-  ;; Remap the standard rust-mode to rust-ts-mode
-  (add-to-list 'major-mode-remap-alist '(rust-mode . rust-ts-mode))
-  :config
-  (setq rust-format-on-save t))
-
-
-(use-package treesit-auto
-  :ensure t
-  :custom
-  (treesit-auto-install 'prompt)
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
-
-
-(use-package rust-ts-mode
-  :mode "\\.rs\\'"
-  :hook (rust-ts-mode . eglot-ensure)
-  :init
-  (add-to-list 'major-mode-remap-alist '(rust-mode . rust-ts-mode)))
-
-(use-package cargo
-  :ensure t
-  :hook (rust-ts-mode . cargo-minor-mode))
-;; Font Locking: Tree-sitter supports different "levels" of highlighting. You can adjust this with (setq treesit-font-lock-level 4)
-
-(use-package rust-ts-mode
-  :mode "\\.rs\\'"
-  :init
-  ;; Remap standard rust-mode to rust-ts-mode
-  (add-to-list 'major-mode-remap-alist '(rust-mode . rust-ts-mode))
-  :hook (rust-ts-mode . eglot-ensure)
-  :config
-  (setq rust-format-on-save t))
-
-(use-package cargo
-  :ensure t
-  :hook (rust-ts-mode . cargo-minor-mode))
-====================================================================
-;; 1. Automatic Grammar Management
-;; rust-ts-mode requires a compiled grammar. This package downloads it for you.
-(use-package treesit-auto
-  :ensure t
-  :custom
-  (treesit-auto-install 'prompt)
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
 
 ;; 2. The Core Rust Tree-Sitter Mode
 (use-package rust-ts-mode
@@ -257,7 +49,7 @@ emacsclient -t(or -nw)
   (corfu-auto t)
   (corfu-auto-prefix 2))
 
-;; rustup component add rust-analyzer rustfmt clippy
+
 ===============================================================
 (load-theme 'theme-name t)
 ===============================================
