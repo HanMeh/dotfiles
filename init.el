@@ -17,6 +17,8 @@
 ;; Boston, MA 02110-1301, USA.
 
 ;;; code
+;; ====\
+;; ====/
 ===============================================================================================================================
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")))
@@ -31,6 +33,25 @@
 (set-fringe-mode 10)               ; give some breathing room
 (menu-bar-mode -1)                 ; disable menubar
 (blink-cursor-mode 0)              ; disable blinking cursor
+
+;; (horizontal-scroll-bar-mode -1)
+;; (pixel-scroll-precision-mode 1)
+;; (tab-bar-mode -1)
+;; (column-number-mode)
+;; (display-line-numbers-mmode)
+;; (setq inhibit-startup-screen t)
+
+;; (package-initialize) 
+===============================================================================================================================
+ 
+(use-package nord-theme
+  :ensure t
+  :config
+  (load-theme 'nord t))
+
+;; Emacs 29+ syntax
+;; (keymap-global-set "C-t" #'whitespace-mode)
+;; (keymap-set texinfo-mode-map "C-c C-c g" 'texinfo-insert-@group)
 ===============================================================================================================================
   (use-package rust-ts-mode
   :mode "\\.rs\\'"
@@ -40,6 +61,7 @@
   :config
   (setq rust-format-on-save t))
 
+;; (add-hook 'rust-mode-hook 'cargo-minor-mode)
 
 (use-package treesit-auto
   :ensure t
@@ -49,7 +71,7 @@
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
-
+;; (setq treesit-font-lock-level 4)
 
 (use-package cargo
   :ensure t
@@ -85,6 +107,7 @@
 ;; code completion
 ;; Rusty Object Notation (.ron) files
 ;; tab
+;; psrenthesis/smartparens
  ------------------------------------------------------------------------------------------------------------------------------
   
 ;; comments
@@ -95,6 +118,8 @@
 ;; Rust files start with #![...] (inner attributes), which looks like a shebang to Emacs -- prevent auto-chmod on save
 ;; CamelCase aware editing operations
 :: (subword-mode +1)
+;; rust-ts-mode is the built-in (since Emacs 29) major mode that uses Tree-sitter for advanced syntax highlighting and indentation.
+;; You can use them together by configuring rustic-mode to use rust-ts-mode as its foundation rather than the older rust-mode.
  ------------------------------------------------------------------------------------------------------------------------------
   
 
