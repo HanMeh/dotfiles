@@ -1,5 +1,22 @@
 ;;; 
+;;; License:
 
+;; This program is free software; you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License
+;; as published by the Free Software Foundation; either version 3
+;; of the License, or (at your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with GNU Emacs; see the file COPYING.  If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+
+;;; code
 ===============================================================================================================================
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")))
@@ -66,6 +83,8 @@
 ;; lint/format
 ;; use flycheck with lsp-mode
 ;; code completion
+;; Rusty Object Notation (.ron) files
+;; tab
  ------------------------------------------------------------------------------------------------------------------------------
   
 ;; comments
@@ -73,6 +92,9 @@
 ;; rust-ts-mode requires a compiled grammar. This treesit-auto downloads it for you.
 ;; Remap standard rust-mode to rust-ts-mode
 ;; to avoid :ensur t for every package add (setq use-package-always-ensure t)
+;; Rust files start with #![...] (inner attributes), which looks like a shebang to Emacs -- prevent auto-chmod on save
+;; CamelCase aware editing operations
+:: (subword-mode +1)
  ------------------------------------------------------------------------------------------------------------------------------
   
 
