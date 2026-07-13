@@ -1,0 +1,23 @@
+layout {
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+        children
+        pane size=1 borderless=true {
+            plugin location="zellij:status-bar"
+        }
+    }
+
+    tab name="Rust IDE" focus=true {
+        pane split_direction="vertical" {
+            // Main Pane: Launches your instant Emacs terminal client
+            pane size="65%" command="emacsclient" {
+                args "-t" "."
+                focus true
+            }
+            // Side Pane: Dedicated space for raw terminal commands or logs
+            pane size="35%" name="Cargo Terminal"
+        }
+    }
+}

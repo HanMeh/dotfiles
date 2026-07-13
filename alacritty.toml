@@ -1,0 +1,67 @@
+# Open or create ~/.config/alacritty/alacritty.toml and add the following lines:[font]
+size = 12.0
+
+[font.normal]
+family = "FiraCode Nerd Font"
+style = "Regular"
+
+[font.bold]
+family = "FiraCode Nerd Font"
+style = "Bold"
+
+[font.italic]
+family = "FiraCode Nerd Font"
+style = "Italic"
+
+[font.bold_italic]
+family = "FiraCode Nerd Font"
+style = "Bold Italic"
+
+
+# Nord Light Color Palette for Alacritty
+[colors.primary]
+background = "#eceff4" # Snow Storm (Brightest Light Gray)
+foreground = "#2e3440" # Nord Night (Deep Gray/Black)
+dim_foreground = "#4c566a"
+
+[colors.cursor]
+text = "#eceff4"
+cursor = "#434c5e"
+
+[colors.vi_mode_cursor]
+text = "#eceff4"
+cursor = "#5e81ac"
+
+[colors.selection]
+text = "CellForeground"
+background = "#d8dee9"
+
+[colors.search.matches]
+foreground = "CellBackground"
+background = "#88c0d0"
+
+# Normal terminal colors
+[colors.normal]
+black = "#3b4252"
+red = "#bf616a"
+green = "#a3be8c"
+yellow = "#ebcb8b"
+blue = "#81a1c1"
+magenta = "#b48ead"
+cyan = "#88c0d0"
+white = "#e5e9f0"
+
+# Bright terminal colors
+[colors.bright]
+black = "#4c566a"
+red = "#bf616a"
+green = "#a3be8c"
+yellow = "#ebcb8b"
+blue = "#81a1c1"
+magenta = "#b48ead"
+cyan = "#8fbcbb"
+white = "#ffffff"
+
+
+[window]
+opacity = 1.0 # Absolute solid light background for max eye comfort

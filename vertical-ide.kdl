@@ -1,0 +1,54 @@
+layout {
+    // 1. Portrait UI Optimization: Keep bars clean and flat
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+        children
+        pane size=1 borderless=true {
+            plugin location="zellij:status-bar"
+        }
+    }
+
+    // TAB 1: The Core Editor & Runtime Stack
+    tab name="1: Code & Logs" focus=true {
+        // Vertical monitors thrive on horizontal cuts (stacking panels like bricks)
+        pane split_direction="horizontal" {
+            
+            // TOP PANE (60% Height): Massive viewport for your Emacs editor
+            pane size="60%" name="Emacs Workspace" command="emacsclient" {
+                args "-t" "."
+                focus true
+            }
+
+            // BOTTOM PANEL (40% Height): Splits vertically into two columns
+            pane size="40%" split_direction="vertical" {
+                
+                // BOTTOM LEFT: Live Cargo diagnostic compiler feedback loop
+                pane name="Cargo Watch" command="cargo" {
+                    args "watch" "-x" "check"
+                }
+
+                // BOTTOM RIGHT: Server runtime process logs or REPL console
+                pane name="Server Logs" command="cargo" {
+                    args "run"
+                }
+            }
+        }
+    }
+
+    // TAB 2: The Full-Screen Git Command Center
+    tab name="2: Git Control" {
+        pane split_direction="horizontal" {
+            // A long vertical monitor displays massive amounts of Git history beautifully
+            pane name="Magit Workspace" command="emacsclient" {
+                args "-t" "-e" "(magit-status)"
+            }
+        }
+    }
+
+    // TAB 3: Isolated Full-Screen Scratch Sandbox
+    tab name="3: Sandbox Terminal" {
+        pane name="Raw Interactive Shell"
+    }
+}

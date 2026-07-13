@@ -1,0 +1,77 @@
+simplified_ui false
+
+themes {
+    nord-light {
+        fg "#2e3440"        // Deep gray text
+        bg "#eceff4"        // Soft snow-storm white background
+        black "#3b4252"
+        red "#bf616a"       // Flycheck-style crimson
+        green "#a3be8c"
+        yellow "#ebcb8b"
+        blue "#5e81ac"      // Sleek arctic blue
+        magenta "#b48ead"
+        cyan "#88c0d0"
+        white "#e5e9f0"
+        orange "#d08770"
+    }
+}
+
+// Set it as your active theme
+theme "nord-light"
+
+
+// 1. Wipe the default layout to avoid key collisions with Emacs
+keybinds clear-defaults=true {
+
+    // 2. Set 'Ctrl b' as your only Zellij action prefix (like tmux)
+    // Emacs rarely uses C-b for complex chains (it is just move cursor backward)
+    // If you prefer, you can use "Ctrl a" or "Ctrl space" instead.
+    normal {
+        bind "Ctrl b" { SwitchToMode "Tmux"; }
+    }
+
+    // 3. Define what happens AFTER you press your prefix (C-b)
+    tmux {
+        // Switch modes or back out
+        bind "Esc" { SwitchToMode "Normal"; }
+        bind "Ctrl b" { Write 2; SwitchToMode "Normal"; } // Double tap sends literal C-b to Emacs
+
+        // Pane Splitting and Management
+        bind "n" { NewPane "Right"; SwitchToMode "Normal"; }
+        bind "d" { NewPane "Down"; SwitchToMode "Normal"; }
+        bind "x" { CloseFocus; SwitchToMode "Normal"; }
+        bind "f" { ToggleFocusFullscreen; SwitchToMode "Normal"; }
+
+        // Tab (Workspace) Management
+        bind "t" { NewTab; SwitchToMode "Normal"; }
+        bind "w" { CloseTab; SwitchToMode "Normal"; }
+        bind "Right" { GoToNextTab; SwitchToMode "Normal"; }
+        bind "Left" { GoToPreviousTab; SwitchToMode "Normal"; }
+
+        // Session Control
+        bind "q" { Quit; }
+    }
+
+    // 4. Quick navigation that doesn't conflict with Emacs core navigation
+    // This allows you to jump panes using Alt + Arrow keys instantly
+    shared_except "locked" {
+        bind "Alt Left" { MoveFocus "Left"; }
+        bind "Alt Right" { MoveFocus "Right"; }
+        bind "Alt Up" { MoveFocus "Up"; }
+        bind "Alt Down" { MoveFocus "Down"; }
+    }
+}
+
+
+mirror_session false
+copy_on_select true
+
+
+// Enable the core resurrection feature
+session_serialization true
+
+// Serialize the exact text layout visible inside terminal panes 
+pane_viewport_serialization true
+
+// Keep the last 1000 lines of scrollback history for each pane on restart
+scrollback_lines_to_serialize 1000

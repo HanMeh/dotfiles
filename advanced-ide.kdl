@@ -1,0 +1,37 @@
+layout {
+    // 1. Set up the universal top and bottom visual bars
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+        children
+        pane size=1 borderless=true {
+            plugin location="zellij:status-bar"
+        }
+    }
+
+    // 2. Define the main workspace tab
+    tab name="Advanced IDE" focus=true {
+        // Create the primary vertical partition
+        pane split_direction="vertical" {
+            
+            // LEFT PANEL (65%): Automatically boots your Emacs terminal client
+            pane size="65%" name="Emacs Workspace" command="emacsclient" {
+                args "-t" "."
+                focus true
+            }
+
+            // RIGHT CONTAINER (35%): Splits horizontally into two 50/50 blocks
+            pane size="35%" split_direction="horizontal" {
+                
+                // TOP RIGHT (50% of the container): Automatically launches a live compilation watcher
+                pane name="Cargo Watcher" command="cargo" {
+                    args "watch" "-x" "check"
+                }
+
+                // BOTTOM RIGHT (50% of the container): Raw, named terminal ready for interactive REPL commands
+                pane name="Interactive-REPL"
+            }
+        }
+    }
+}

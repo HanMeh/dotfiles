@@ -1,4 +1,22 @@
 
+;; 1. Package Repositories & use-package Initialization
+;; 2. UI Minimalist Flags & Nerd Font Face Selection
+;; 3. Modus-Operandi Theme Activation
+;; 4. Tree-Sitter Mode Remapping (rust-mode -> rust-ts-mode)
+;; 5. LSP Mode Configuration (with custom M-., M-, navigation keys)
+;; 6. Cargo Integration (with C-c c b, C-c c t bindings)
+;; 7. Corfu & Cape Auto-Completion (Tab cycling enabled)
+;; 8. Which-Key Interface Activation (0.3s delay)
+;; 9. Nerd-Icons Support Engine
+;; 10. Flycheck & LSP-UI Sideline Error Tracking
+;; 11. Projectile Workspace Search (Target directory ignored)
+;; 12. Nerd-Icons-Dired File Tree Rendering
+;; 13. Doom-Modeline Status Bar Configuration
+;; 14. Apheleia Background Format-on-Save via rustfmt
+;; 15. High-Visibility Light-Theme Custom Underline Faces
+;; 16. Magit Git Engine (C-x g full-window view)
+
+
 
 ;; Optional: Add a custom function to run cargo and handle user input
 ;; This is useful if you have a Rust program that reads from stdin
