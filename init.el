@@ -138,6 +138,7 @@
 ;; launch multiplexer inside terminal emulator  
 ;; To install Nord Emacs manually, download the latest version or clone the repository. Afterwards copy the nord-theme.el file into the .emacs.d/themes folder located in your home directory.
 ;; External dynamic libraries (.so, .dll, or .dylib) compiled from Git repositories using treesit-language-source-alist.
+;; Linux: Copy the .ttf files to ~/.local/share/fonts/ (or ~/.fonts/), then run fc-cache -fv to refresh your cache.
  ------------------------------------------------------------------------------------------------------------------------------
   
 ;; TO DO
@@ -145,7 +146,7 @@
 ;; lsp
 ;; dap
 ;; flycheck
-;; cargo   | cargo-watch
+;; cargo  | cargo-watch
 ;; git | git gutter
 ;; project management
 ;; toml
@@ -162,6 +163,10 @@
 ;; ido-mode
 ;; ignore rules
 ;; minimap
+;; zellih plugins
+;; hyprland  |  waybar  |
+;; https://www.gnome-look.org/browse/
+;; backup
  ------------------------------------------------------------------------------------------------------------------------------
   
 ;; comments
@@ -523,4 +528,7 @@ export EDITOR="emacsclient -t -a ''"
                 apheleia-mode-alist)))
 
 ------------------------------------------------------------------------------------------------------------------------------
+(setq-default indent-tabs-mode t)
+(setq-default tab-width 4)
+
 ------------------------------------------------------------------------------------------------------------------------------
