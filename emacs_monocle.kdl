@@ -1,0 +1,20 @@
+layout {
+    pane size=1 borderless=true {
+        // Use Zellij's built-in status plugin customized for titles
+        plugin location="zellij:tab-bar"
+    }
+    // Your main Emacs client editing space
+    pane name="Emacs" command="emacsclient" {
+        args "-nw"
+    }
+    pane size=1 borderless=true {
+        plugin location="zellij:status-bar" {
+            // This configuration tells Zellij to explicitly print 
+            // the pane title (your Emacs mode line info) at the bottom
+            config {
+                format_left  "{mode} #[fg=blue,bold]{session} ── {tabs}"
+                format_right "{command_emacs_status} #[fg=green]{datetime}"
+            }
+        }
+    }
+}

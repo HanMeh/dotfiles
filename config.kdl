@@ -75,3 +75,52 @@ pane_viewport_serialization true
 
 // Keep the last 1000 lines of scrollback history for each pane on restart
 scrollback_lines_to_serialize 1000
+
+
+keybinds {
+    normal {
+        // Press Alt + d to instantly toggle a floating Emacs Dired explorer
+        bind "Alt d" {
+            LaunchOrFocusFloatingPane "emacsclient" {
+                args "-nw" "-e" "(dired \".\")"
+            }
+        }
+    }
+}
+
+
+bind "Alt w" { LaunchOrFocusFloatingPane "emacsclient" { args "-nw" "-s" "work"; }; }
+bind "Alt n" { LaunchOrFocusFloatingPane "emacsclient" { args "-nw" "-s" "writing"; }; }
+
+
+keybinds {
+    // Modify your normal navigation behavior
+    normal {
+        // Example: If moving focus down lands on your Emacs pane,
+        // you can double-bind actions or quickly lock manually.
+        bind "Alt g" { ToggleFocusFullscreen; SwitchToMode "Locked"; }
+    }
+    locked {
+        // While locked, ONLY this shortcut will break you out back to Zellij
+        bind "Ctrl g" { SwitchToMode "Normal"; }
+    }
+}
+
+
+layout {
+    pane size=1 borderless=true {
+        plugin location="zellij:tab-bar"
+    }
+    // Launch Emacs client and force Zellij into locked mode immediately
+    pane name="Emacs Buffer" command="emacsclient" focus=true {
+        args "-nw"
+    }
+    pane size=1 borderless=true {
+        plugin location="zellij:status-bar"
+    }
+}
+// Force the initial state of this specific tab to run in locked mode
+mode "Locked"
+
+
+

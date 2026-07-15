@@ -1,4 +1,5 @@
-;;; 
+;;; ;; -*- lexical-binding: t; -*-
+
 ;;; License:
 
 ;; This program is free software; you can redistribute it and/or
@@ -51,6 +52,32 @@
 ;; 9. Icon Support for Nerd Fonts
 (use-package nerd-icons
   :ensure t)
+
+
+
+(set-window-fringes nil 0 0)    ; Remove left/right visual borders inside windows
+(fringe-mode 0)                ; Turn off fringes globally 
+
+
+(setq window-divider-default-places t
+      window-divider-default-bottom-width 1
+      window-divider-default-right-width 1)
+(window-divider-mode 1)
+
+
+(setq inhibit-startup-screen t)        ; Skip the multi-line GNU welcome message
+(setq initial-scratch-message nil)     ; Make the scratch buffer completely empty
+(setq display-time-interval 60)         ; Reduce frequency of time updates in strings
+
+
+(global-visual-line-mode 1)            ; Wrap lines at word boundaries visually
+
+
+;; Modern syntax for global bindings
+(keymap-global-set "C-c l" 'display-line-numbers-mode)
+(keymap-global-set "<f5>" 'revert-buffer)
+
+
 ===============================================================================================================================
 ;; (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
 (use-package nord-theme
@@ -139,11 +166,14 @@
 ;; To install Nord Emacs manually, download the latest version or clone the repository. Afterwards copy the nord-theme.el file into the .emacs.d/themes folder located in your home directory.
 ;; External dynamic libraries (.so, .dll, or .dylib) compiled from Git repositories using treesit-language-source-alist.
 ;; Linux: Copy the .ttf files to ~/.local/share/fonts/ (or ~/.fonts/), then run fc-cache -fv to refresh your cache.
+;; export EDITOR="emacsclient -t -a ''"
+;; Ensure cargo is in the Emacs executable path mean
+
  ------------------------------------------------------------------------------------------------------------------------------
   
 ;; TO DO
 ;; tree-sitter
-;; lsp
+;; lsp |lsp-mode
 ;; dap
 ;; flycheck
 ;; cargo  | cargo-watch
@@ -167,6 +197,8 @@
 ;; hyprland  |  waybar  |
 ;; https://www.gnome-look.org/browse/
 ;; backup
+;; console file manager like yazi | ranger
+;; multiple cursor
  ------------------------------------------------------------------------------------------------------------------------------
   
 ;; comments
@@ -183,6 +215,11 @@
 ;; Because Eglot hooks directly into the core language server, this requires rustfmt to be available alongside your system's rust-analyzer installation
 ;; sudo dnf install fira-code-fonts    and to verify    fc-list : family | grep -i "firacode"   or   fc-list : family | grep -i "firacode" | uniq
 ;; sudo dnf install ripgrep
+;; /etc/ssh/sshd_config.d/hardening.conf    |   sudo systemctl restart sshd   |   change the default SSH port (22) to reduce automated background bot scans
+;; autostarts
+;; ;; REMOVE OR COMMENT OUT THESE LINES IF THEY EXIST:
+;; ;; (server-start)
+;; ;; (require 'server)
 
  ------------------------------------------------------------------------------------------------------------------------------
   
@@ -531,4 +568,96 @@ export EDITOR="emacsclient -t -a ''"
 (setq-default indent-tabs-mode t)
 (setq-default tab-width 4)
 
+------------------------------------------------------------------------------------------------------------------------------
+(global-tab-line-mode 1)
+;; Hide extra button clutter for small terminal panes
+(setq tab-line-new-button-show nil
+      tab-line-close-button-show nil)
+
+
+
+(use-package tab-line
+  :bind (("M-[" . tab-line-switch-to-prev-tab)
+         ("M-]" . tab-line-switch-to-next-tab)))
+
+------------------------------------------------------------------------------------------------------------------------------
+(use-package emacs
+  :ensure nil
+  :config
+  ;; 1. Update the terminal frame title dynamically
+  (setq frame-title-format
+        '("" invocation-name "@" system-name " │ "
+          (:eval (if (buffer-file-name)
+                     (abbreviate-file-name (buffer-file-name))
+                   "%b"))
+          " │ %m"))
+
+  ;; 2. Tell terminal Emacs frames to emit Xterm title change codes
+  (unless (display-graphic-p)
+    (add-hook 'post-command-hook
+              (lambda ()
+                (when (and (fboundp 'xterm-set-window-title) 
+                           (frame-parameter nil 'window-id))
+                  (xterm-set-window-title (frame-parameter nil 'name)))))))
+
+
+;; Hide the mode line inside Emacs to maximize text area
+(setq-default mode-line-format nil)
+
+------------------------------------------------------------------------------------------------------------------------------
+
+(global-set-key (kbd "M-[") 'tab-bar-switch-to-prev-tab)
+(global-set-key (kbd "M-]") 'tab-bar-switch-to-next-tab)
+(global-set-key (kbd "M-T") 'tab-new)
+
+;; Bind direct workspace switching to an easy key combination
+(global-set-key (kbd "C-c w") 'tab-switch)
+
+
+------------------------------------------------------------------------------------------------------------------------------
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs loaded in %s with %d garbage collections."
+                     (emacs-init-time)
+                     gcs-done)))
+------------------------------------------------------------------------------------------------------------------------------
+
+;; -*- lexical-binding: t; -*-
+
+;; 1. Raise GC threshold to 100MB at startup
+(setq gc-cons-threshold (* 100 1024 1024))
+
+;; 2. Restore GC threshold to a reasonable level (2MB) after boot
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq gc-cons-threshold (* 2 1024 1024))))
+
+
+------------------------------------------------------------------------------------------------------------------------------
+(defun auto-compile-init-file ()
+  "Automatically byte-compile init.el on save."
+  (when (equal (buffer-file-name) (expand-file-name user-init-file))
+    (byte-compile-file user-init-file)))
+
+(add-hook 'after-save-hook #'auto-compile-init-file)
+
+------------------------------------------------------------------------------------------------------------------------------
+(defun my/open-frame-on-second-monitor ()
+  "Open a standard frame on the designated external monitor."
+  (make-frame-on-monitor "HDMI-1"))
+
+(add-hook 'after-init-hook #'my/open-frame-on-second-monitor)
+
+
+------------------------------------------------------------------------------------------------------------------------------
+(setq backup-by-copying t      ; Don't clobber symlinks
+      kept-new-versions 10     ; Keep the last 10 versions
+      kept-old-versions 2      ; Keep the oldest 2 versions
+      version-control t)       ; Use numbered backups (~1~, ~2~, etc.)
+
+;; Redirect all automatic backups to your external drive path
+(setq backup-directory-alist
+      '(("." . "/media/user/ExternalDrive/EmacsLiveBackups/")))
+------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------

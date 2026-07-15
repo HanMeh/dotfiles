@@ -46,3 +46,11 @@ zellij_auto_load() {
 # Wayland alternative using standard sysfs monitor card geometry readings
 local width=$(cat /sys/class/drm/card*-*/modes 2>/dev/null | head -n 1 | cut -d'x' -f1)
 local height=$(cat /sys/class/drm/card*-*/modes 2>/dev/null | head -n 1 | cut -d'x' -f2)
+
+
+# Add this to your ~/.bashrc or ~/.zshrc
+ze-emacs() {
+    # Dynamically rename the current Zellij pane to show it is running Emacs
+    zellij action rename-pane "Emacs: $(basename "$PWD")"
+    emacsclient -nw "$@"
+}
