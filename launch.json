@@ -1,0 +1,30 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug Rust Binary",
+      "program": "${workspaceFolder}/target/debug/your_binary_name",
+      "args": [],            (e.g., ["--verbose", "--port", "8080"]).
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
+
+
+
+
+
+
+
+
+{
+  "name": "Launch Service with Args",
+  "type": "lldb",
+  "request": "launch",
+  "program": "${workspaceFolder}/target/debug/my_api",
+  "args": ["--port", "3000"],
+  "env": { "NODE_ENV": "development" },
+  "cwd": "${workspaceFolder}"
+}

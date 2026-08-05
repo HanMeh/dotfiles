@@ -1,0 +1,13 @@
+# Set custom build flags for all projects
+[build]
+rustflags = ["-C", "target-cpu=native"]
+
+# Define custom command aliases
+[alias]
+b = "build"
+c = "check"
+t = "test"
+
+# Configure a specific linker for a target platform
+[target.x86_64-unknown-linux-gnu]
+linker = "clang"

@@ -43,6 +43,11 @@ zellij_auto_load() {
 
 
 
+
+
+
+
+
 # Wayland alternative using standard sysfs monitor card geometry readings
 local width=$(cat /sys/class/drm/card*-*/modes 2>/dev/null | head -n 1 | cut -d'x' -f1)
 local height=$(cat /sys/class/drm/card*-*/modes 2>/dev/null | head -n 1 | cut -d'x' -f2)
@@ -54,3 +59,31 @@ ze-emacs() {
     zellij action rename-pane "Emacs: $(basename "$PWD")"
     emacsclient -nw "$@"
 }
+
+
+
+# 1. Colors and Prompt
+export TERM="xterm-256color"
+export CLICOLOR=1
+
+# 2. Enhanced Quality of Life Aliases
+alias ls='ls --color=auto'
+alias ll='ls -lah'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias grep='grep --color=auto'
+
+# 3. Prevent Accidental Overwrites
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+
+# 4. Unlimited History & Instant Saving
+export HISTSIZE=100000
+export HISTFILESIZE=100000
+export HISTCONTROL=ignoreboth
+shopt -s histappend # Append history instantly instead of overwriting on close
+
+# 5. Fix Emacs Alt Key Behavior in some terminals
+bind '"\e\e[D": backward-word'
+bind '"\e\e[C": forward-word'

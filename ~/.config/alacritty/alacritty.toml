@@ -1,0 +1,115 @@
+import = ["~/.config/alacritty/current-theme.toml"]
+
+
+
+
+
+
+
+# Open or create ~/.config/alacritty/alacritty.toml and add the following lines:[font]
+size = 12.0
+
+[font.normal]
+family = "FiraCode Nerd Font"
+style = "Regular"
+
+[font.bold]
+family = "FiraCode Nerd Font"
+style = "Bold"
+
+[font.italic]
+family = "FiraCode Nerd Font"
+style = "Italic"
+
+[font.bold_italic]
+family = "FiraCode Nerd Font"
+style = "Bold Italic"
+
+
+# Nord Light Color Palette for Alacritty
+[colors.primary]
+background = "#eceff4" # Snow Storm (Brightest Light Gray)
+foreground = "#2e3440" # Nord Night (Deep Gray/Black)
+dim_foreground = "#4c566a"
+
+[colors.cursor]
+text = "#eceff4"
+cursor = "#434c5e"
+
+[colors.vi_mode_cursor]
+text = "#eceff4"
+cursor = "#5e81ac"
+
+[colors.selection]
+text = "CellForeground"
+background = "#d8dee9"
+
+[colors.search.matches]
+foreground = "CellBackground"
+background = "#88c0d0"
+
+# Normal terminal colors
+[colors.normal]
+black = "#3b4252"
+red = "#bf616a"
+green = "#a3be8c"
+yellow = "#ebcb8b"
+blue = "#81a1c1"
+magenta = "#b48ead"
+cyan = "#88c0d0"
+white = "#e5e9f0"
+
+# Bright terminal colors
+[colors.bright]
+black = "#4c566a"
+red = "#bf616a"
+green = "#a3be8c"
+yellow = "#ebcb8b"
+blue = "#81a1c1"
+magenta = "#b48ead"
+cyan = "#8fbcbb"
+white = "#ffffff"
+
+
+[window]
+opacity = 1.0 # Absolute solid light background for max eye comfort
+
+
+
+
+
+
+
+
+
+
+[window]
+padding = { x = 12, y = 12 } # Adds breathing room around text
+dynamic_title = true         # Lets tools update your window title
+opacity = 0.95               # Optional: Subtle transparency
+
+[font]
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+size = 12.0                  # Adjust to your screen resolution
+
+[cursor]
+style = { shape = "Block", blinking = "On" }
+blink_interval = 500
+
+
+
+[window]
+padding = { x = 10, y = 10 }
+dynamic_title = true
+
+[font]
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+size = 11.0
+
+[terminal]
+# Automatically boot into zellij upon launch
+shell = { program = "zellij" }
+
+
+[shell]
+program = "/usr/bin/zellij"

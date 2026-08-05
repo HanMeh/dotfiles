@@ -1,3 +1,18 @@
+~/dotfiles/
+├── alacritty/ ...
+├── emacs/ ...
+├── zellij/ ...
+├── fish/
+│   └── .config/
+│       └── fish/
+│           └── config.fish
+├── hyprland/
+│   └── .config/
+│       └── hypr/
+│           └── hyprland.conf
+└── bash/
+    ├── .bash_profile
+    └── .bashrc
 
 ;; 1. Package Repositories & use-package Initialization
 ;; 2. UI Minimalist Flags & Nerd Font Face Selection
@@ -15,7 +30,7 @@
 ;; 14. Apheleia Background Format-on-Save via rustfmt
 ;; 15. High-Visibility Light-Theme Custom Underline Faces
 ;; 16. Magit Git Engine (C-x g full-window view)
-;; realestate 
+;; 
 
 
 
@@ -250,7 +265,24 @@
 ;; Linux: Copy the .ttf files to ~/.local/share/fonts/ (or ~/.fonts/), then run fc-cache -fv to refresh your cache.
 ;; export EDITOR="emacsclient -t -a ''"
 ;; Ensure cargo is in the Emacs executable path mean
-
+;; sudo dnf install rustup
+;; M-x treesit-install-language-grammar
+;; curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+;; sudo dnf install -y lld
+;; sudo dnf install lldb
+;; sudo dnf install -y clang lld llvm
+;; sudo dnf install -y mold
+;; sudo dnf5 versionlock add tree-sitter-devel
+;; rsync -avz --delete ~/.emacs.d/ user@192.168.1.55:/home/user/.emacs.d/
+;; sudo dnf install -y ansible-core
+;; sudo dnf groupinstall -y "Development Tools" "Development Libraries" && sudo dnf install -y ncurses-devel bison flex openssl-devel libelf-devel bc git ccache dwarves
+;; sudo dnf upgrade linux-firmware
+;; cargo install glsl-language-server
+;; sudo dnf install clang clang-tools-extra compiler-rt libstdc++-devel
+;; alias e='emacs -nw'
+;; mkdir -p ~/dotfiles/emacs ~/dotfiles/alacritty ~/dotfiles/zellij
+;; ln -s ~/dotfiles/alacritty ~/.config/alacritty
+;; GNU Stow
  ------------------------------------------------------------------------------------------------------------------------------
   
 ;; TO DO
@@ -740,6 +772,536 @@ export EDITOR="emacsclient -t -a ''"
 ;; Redirect all automatic backups to your external drive path
 (setq backup-directory-alist
       '(("." . "/media/user/ExternalDrive/EmacsLiveBackups/")))
+------------------------------------------------------------------------------------------------------------------------------
+;; Disable the distracting startup splash screen
+(setq inhibit-startup-screen t)
+
+;; Disable GUI elements for a minimalist window
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+
+;; Disable visible fringes on the left and right edges
+(set-fringe-mode 0)
+
+;; Stop the cursor from blinking
+(blink-cursor-mode -1)
+
+;; Hide the annoying native UI bell sound
+(setq ring-bell-function 'ignore)
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+;; 1. Tell Emacs where MELPA is
+(add-to-list 'package-archives '("melpa" . "https://melpa.org") t)
+
+;; 2. Make use-package download packages automatically by default
+(setq use-package-always-ensure t)
+
+------------------------------------------------------------------------------------------------------------------------------
+;; Remove all text status bars globally
+(setq-default mode-line-format nil)
+
+;; Remove the visual dividing line between split windows
+(set-face-attribute 'vertical-border nil :foreground (face-background 'default))
+
+;; Disable all line numbers for zero visual distraction
+(global-display-line-numbers-mode -1)
+
+;; Maximize the Emacs window immediately on startup
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+------------------------------------------------------------------------------------------------------------------------------
+;; Add these inside your existing (use-package lsp-mode ...) :config block
+(setq lsp-completion-enable t)          ; Keep the completion engine active
+(setq lsp-completion-provider :none)     ; Turn off LSP's internal popup UI
+
+------------------------------------------------------------------------------------------------------------------------------
+
+;; 1. Define the custom toggle function
+(defun my/toggle-mode-line ()
+  "Turn the mode line completely on or off dynamically."
+  (interactive)
+  (if mode-line-format
+      (setq-default mode-line-format nil)
+    (setq-default mode-line-format
+                  '("%e"
+                    mode-line-front-space
+                    mode-line-buffer-identification ; Shows the file name/path
+                    "   "
+                    mode-line-position
+                    mode-line-modes                  ; Shows major mode & Git branch
+                    mode-line-misc-info)))
+  ;; Force Emacs to redraw all open windows instantly
+  (force-mode-line-update t))
+
+;; 2. Bind the toggle to a global hotkey
+;; "C-c t m" stands for (C)ontrol-(c), (t)oggle (m)ode line
+(global-set-key (kbd "C-c t m") 'my/toggle-mode-line)
+
+------------------------------------------------------------------------------------------------------------------------------
+
+;; Increase the threshold for garbage collection (Default is only 800KB)
+;; This sets it to 100MB, preventing Emacs from constantly pausing to clean RAM
+(setq gc-cons-threshold 100000000)
+
+;; Frequently clean up memory only when idling, keeping typing smooth
+(run-with-idle-timer 5 t #'garbage-collect)
+
+;; Increase the amount of data Emacs reads from background processes in one chunk
+;; Changed from the default 4KB to 1MB to handle large Rust JSON payloads
+(setq read-process-output-max (* 1024 1024))
+
+------------------------------------------------------------------------------------------------------------------------------
+;; Add these INSIDE your existing (use-package lsp-mode ...) :config block
+(setq lsp-log-io nil)                    ; Disable logging data streams (massive speed boost)
+(setq lsp-enable-semantic-highlighting nil) ; Turn off heavy token re-coloring
+
+;; Prevent Emacs from watching unnecessary files in massive directories
+(add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.cargo\\'")
+(add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]target\\'")
+
+
+;; Quick background engine management hotkeys
+(global-set-key (kbd "C-c l r") 'lsp-workspace-restart) ; Restart the Rust server instantly
+(global-set-key (kbd "C-c l d") 'lsp-disconnect)        ; Kill the server to free system RAM
+
+------------------------------------------------------------------------------------------------------------------------------
+(add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.cargo\\'")
+(add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]target\\'")
+
+------------------------------------------------------------------------------------------------------------------------------
+(setq lsp-eldoc-enable-hover nil)
+(setq lsp-headerline-breadcrumb-enable nil)
+(setq lsp-enable-symbol-highlighting nil)
+
+------------------------------------------------------------------------------------------------------------------------------
+;; Add this INSIDE your existing (use-package lsp-mode ...) :config block
+
+(setq lsp-rust-analyzer-cargo-watch-enable nil) ; Turn off automatic cargo check on save
+
+------------------------------------------------------------------------------------------------------------------------------
+(dap-register-debug-template
+ "Rust Debug Binary"
+ (list :type "gdb"
+       :request "launch"
+       :name "Cargo Build & Debug"
+       :dap-compilation "cargo build"
+       :program "${workspaceFolder}/target/debug/my_project"))
+
+------------------------------------------------------------------------------------------------------------------------------
+;; 1. Core Rust Mode with tree-sitter support
+(use-package rust-mode
+  :ensure t
+  :init
+  (setq rust-mode-treesitter-derive t))
+
+;; 2. Cargo Integration (build, test, run shortcuts)
+(use-package cargo
+  :ensure t
+  :hook (rust-mode . cargo-minor-mode))
+
+;; 3. LSP Integration (Language Server Protocol)
+(use-package lsp-mode
+  :ensure t
+  :hook (rust-mode . lsp-deferred)
+  :commands lsp
+  :config
+  ;; Use rust-analyzer as the default server
+  (setq lsp-rust-analyzer-server-display-inlay-hints t
+        lsp-rust-analyzer-display-lifetime-elision-hints "always"))
+
+;; 4. DAP Debugging Configuration
+(use-package dap-mode
+  :ensure t
+  :config
+  (dap-ui-mode 1)
+  (dap-mode 1)
+  
+  ;; Load the native LLDB / GDB debug adapter extensions
+  (require 'dap-lldb)
+  (require 'dap-gdb-lldb)
+  
+  ;; Automatically download the VS Code codelldb adapter package if missing
+  (dap-gdb-lldb-setup)
+  
+  ;; Register a template for your Cargo builds
+  (dap-register-debug-template
+   "Rust::Cargo Debug"
+   (list :type "lldb"
+         :request "launch"
+         :name "Cargo Debug"
+         :cargo (list :args '("build"))
+         :program "${workspaceFolder}/target/debug/${cargo:executable}")))
+
+------------------------------------------------------------------------------------------------------------------------------
+(use-package exec-path-from-shell
+  :ensure t
+  :if (memq window-system '(mac ns x pgtk))
+  :config
+  (exec-path-from-shell-initialize))
+
+------------------------------------------------------------------------------------------------------------------------------
+;; Allow opening a new minibuffer command even if you are already inside one
+(setq enable-recursive-minibuffers t)
+
+;; Automatically resize the minibuffer if your input text spans multiple lines
+(resize-minibuffer-mode 1)
+
+------------------------------------------------------------------------------------------------------------------------------
+
+(use-package compile-on-save
+  :ensure t)
+
+
+
+(defun my/bazel-test-current-file ()
+  "Asynchronously run the closest Bazel test target for the current file."
+  (interactive)
+  (when (buffer-file-name)
+    (let* ((file-path (buffer-file-name))
+           ;; Smart Target Finder: Ask bazel query what test target claims this file.
+           ;; If query fails or is slow, fallback to a path-based guess.
+           (bazel-target 
+            (or (let ((query-cmd (format "bazel query 'attr(srcs, %s, kind(test, //...))' 2>/dev/null" 
+                                         (file-name-nondirectory file-path))))
+                  (string-trim (shell-command-to-string query-cmd)))
+                "//..."))) ;; Worst case fallback: run everything or adjust to a default
+      
+      ;; If a target is found, run it through the Emacs compilation buffer
+      (if (and bazel-target (not (string-empty-p bazel-target)))
+          (progn
+            (message "Bazel: Testing target %s..." bazel-target)
+            ;; compile-command tells 'compile' exactly what to execute
+            (setq-local compile-command (format "bazel test %s" bazel-target))
+            ;; Runs natively, allowing you to use 'C-x `' to jump to errors
+            (compilation-start compile-command))
+        (message "Bazel: No matching test target found for this file.")))))
+
+;; Define a minor mode or function to easily toggle this behavior per buffer
+(define-minor-mode my/bazel-autosave-test-mode
+  "Minor mode to automatically trigger Bazel tests on buffer save."
+  :lighter " BzTest"
+  (if my/bazel-autosave-test-mode
+      (add-hook 'after-save-hook #'my/bazel-test-current-file nil t)
+    (remove-hook 'after-save-hook #'my/bazel-test-current-file t)))
+
+
+
+
+(let ((languages-to-test '(rust-mode-hook
+                           c++-mode-hook
+                           haskell-mode-hook
+                           julia-mode-hook
+                           python-mode-hook
+                           verilog-mode-hook)))
+  (dolist (hook languages-to-test)
+    (add-hook hook #'my/bazel-autosave-test-mode)))
+
+
+------------------------------------------------------------------------------------------------------------------------------
+;; Ensure use-package is installed and configured
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org") t)
+(package-initialize)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(eval-when-compile (require 'use-package))
+(setq use-package-always-ensure t)
+
+;; Configure DAP Mode
+(use-package dap-mode
+  :commands dap-debug
+  :config
+  ;; Enable the UI controls and overlays
+  (dap-ui-mode 1)
+  (dap-tooltip-mode 1)
+  (tooltip-mode 1)
+  
+  ;; Load the CodeLLDB Rust debugger adapter templates
+  (require 'dap-codelldb)
+  
+  ;; Bind a shortcut to start debugging your project
+  :bind
+  ("C-c d d" . dap-debug))
+------------------------------------------------------------------------------------------------------------------------------
+
+(use-package rust-playground
+  :ensure t
+  :bind (("C-c r p" . rust-playground))
+  :config
+  ;; Optional configurations
+  (setq rust-playground-basedir "~/.emacs.d/rust-playground/"))
+
+
+
+;; or to add to rust-ts-mode
+(add-hook 'rust-playground-mode-hook
+          (lambda () (setq-local major-mode 'rust-ts-mode)))
+
+------------------------------------------------------------------------------------------------------------------------------
+
+(use-package treesit
+  :ensure nil ; Built-in to Emacs 29+
+  :config
+  ;; Define the download recipe for the Rust grammar
+  (setq treesit-language-source-alist
+        '((rust "https://github.com")))
+
+  ;; Automatically download and compile the grammar if it is missing
+  (unless (treesit-ready-p 'rust t)
+    (treesit-install-language-grammar 'rust)))
+
+
+
+(use-package treesit
+  :ensure nil ; Built-in to Emacs 29+
+  :config
+  ;; Complete download recipes for all requested grammars
+  (setq treesit-language-source-alist
+        '((c "https://github.com")
+          (cpp "https://github.compp")
+          (haskell "https://github.com")
+          (python "https://github.com")
+          (julia "https://github.com")
+          (glsl "https://github.com/tree-sitter-grammars/tree-sitter-glsl")
+          (spirv "
+          ")
+          (llvm "https://github.com/benwilliamgraham/tree-sitter-llvm")
+          (systemverilog "https://github.com/gmlarumbe/tree-sitter-systemverilog")))
+
+  ;; Loop to automatically install any missing grammar from the list above
+  (dolist (lang (mapcar #'car treesit-language-source-alist))
+    (unless (treesit-ready-p lang t)
+      (message "Tree-sitter: Installing grammar for %s..." lang)
+      (treesit-install-language-grammar lang))))
+
+-----------------
+-------------------------------------------------------------------------------------------------------------
+(use-package glsl-mode
+  :ensure t
+  :mode (;; General and core shaders
+         ("\\.glsl\\'" . glsl-ts-mode)
+         ("\\.vert\\'" . glsl-ts-mode)
+         ("\\.frag\\'" . glsl-ts-mode)
+         ;; Tessellation shaders
+         ("\\.tesc\\'" . glsl-ts-mode)
+         ("\\.tese\\'" . glsl-ts-mode)
+         ;; Geometry and Compute shaders
+         ("\\.geom\\'" . glsl-ts-mode)
+         ("\\.comp\\'" . glsl-ts-mode)
+         ;; Ray tracing shaders (Vulkan / DXR equivalents)
+         ("\\.rgen\\'" . glsl-ts-mode)
+         ("\\.rmiss\\'" . glsl-ts-mode)
+         ("\\.rchit\\'" . glsl-ts-mode)
+         ("\\.rahit\\'" . glsl-ts-mode)
+         ("\\.rint\\'" . glsl-ts-mode)
+         ("\\.rcall\\'" . glsl-ts-mode)
+         ;; Mesh and Task shaders
+         ("\\.mesh\\'" . glsl-ts-mode)
+         ("\\.task\\'" . glsl-ts-mode))
+  :init
+  ;; Automatically map standard mode requests to the Tree-sitter engine
+  (add-to-list 'major-mode-remap-alist '(glsl-mode . glsl-ts-mode)))
+
+
+
+(defun my/disassemble-spirv-binary ()
+  "Disassemble SPIR-V binary files using spirv-dis on the fly."
+  (when (string-match "\\.spv\\'" buffer-file-name)
+    (let ((inhibit-read-only t))
+      ;; Call the external tool to overwrite the buffer text
+      (call-process-region (point-min) (point-max) "spirv-dis" t t nil)
+      (set-buffer-modified-p nil)
+      ;; Put the buffer into your Tree-sitter syntax highlighting mode
+      (spirv-ts-mode)
+      ;; Make it read-only so you don't accidentally save text over your binary
+      (read-only-mode 1))))
+
+;; Hook it up to the file-loading pipeline
+(add-hook 'find-file-hook #'my/disassemble-spirv-binary)
+
+------------------------------------------------------------------------------------------------------------------------------
+(global-display-line-numbers-mode 1)
+
+;; or
+
+(defun my-rust-line-number-hook ()
+  "Enable relative line numbers for Rust development."
+  (setq-local display-line-numbers-type 'relative)
+  (display-line-numbers-mode 1))
+
+;; If you use the standard rust-mode
+(add-hook 'rust-mode-hook #'my-rust-line-number-hook)
+
+;; If you use the modern rustic package
+(add-hook 'rustic-mode-hook #'my-rust-line-number-hook)
+
+;; or
+
+;; Enable relative globally
+(setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode 1)
+
+;; Disable them where they aren't useful
+(dolist (hook '(org-mode-hook
+                markdown-mode-hook
+                term-mode-hook
+                shell-mode-hook
+                eshell-mode-hook))
+  (add-hook hook (lambda () (display-line-numbers-mode -1))))
+
+
+
+(electric-pair-mode 1)
+------------------------------------------------------------------------------------------------------------------------------
+(use-package lsp-mode
+  :hook (rust-ts-mode . lsp-deferred)
+  :commands lsp)
+------------------------------------------------------------------------------------------------------------------------------
+(use-package rust-ts-mode
+  :mode (("\\.rs\\'" . rust-ts-mode)
+         ("Cargo\\.lock\\'" . conf-toml-mode))) ;; Opens lockfiles in a clean config mode
+------------------------------------------------------------------------------------------------------------------------------
+(use-package treesit
+  :ensure nil
+  :if (and (fboundp 'treesit-available-p) (treesit-available-p))
+  :config
+  ;; 1. Core dictionary mapping out upstream grammar repositories
+  (setq treesit-language-source-alist
+        '((rust       "https://github.com")
+          (python     "https://github.com")
+          (javascript "https://github.com" "master" "src")
+          (typescript "https://github.com" "master" "typescript/src")
+          (tsx        "https://github.com" "master" "tsx/src")
+          (json       "https://github.com")
+          (toml       "https://github.com")
+          (yaml       "https://github.com")
+          (markdown   "https://github.com" "main" "src")
+          (html       "https://github.com")
+          (css        "https://github.com")
+          (c          "https://github.com/tree-sitter/tree-sitter-c")
+          (cpp        "https://github.com/tree-sitter/tree-sitter-cpp")))
+
+  ;; 2. Automated evaluation and compilation mechanism
+  (defun my/ensure-treesit-grammars ()
+    "Check all listed grammars and safely compile missing elements silently."
+    (interactive)
+    (dolist (grammar treesit-language-source-alist)
+      (let ((lang (car grammar)))
+        (unless (treesit-language-available-p lang)
+          (message "Tree-sitter: Compiling grammar for %s..." lang)
+          ;; Inhibit confirmations to run non-interactively on startup
+          (let ((inhibit-message t))
+            (treesit-install-language-grammar lang))))))
+
+  ;; 3. Handle version divergence gracefully on initialization
+  (if (>= emacs-major-version 30)
+      ;; Emacs 30+ includes a native auto-install queue or hooks
+      (add-hook 'after-init-hook #'my/ensure-treesit-grammars)
+    ;; Emacs 29 requires an explicit run loop on startup to populate libraries safely
+    (my/ensure-treesit-grammars)))
+
+
+------------------------------------------------------------------------------------------------------------------------------
+(use-package treesit
+  :ensure nil
+  :if (and (fboundp 'treesit-available-p) (treesit-available-p))
+  :config
+  ;; 1. Point Emacs compiler wrappers strictly to Clang
+  (setenv "CC" "clang")
+  (setenv "CXX" "clang++")
+
+  (setq treesit-language-source-alist
+        '((rust       "https://github.com")
+          (python     "https://github.com")
+          (json       "https://github.com")
+          (toml       "https://github.com")))
+
+  (defun my/ensure-treesit-grammars ()
+    "Safely compile missing elements using Clang."
+    (interactive)
+    (dolist (grammar treesit-language-source-alist)
+      (let ((lang (car grammar)))
+        (unless (treesit-language-available-p lang)
+          (message "Tree-sitter: Compiling grammar for %s via Clang..." lang)
+          (let ((inhibit-message t))
+            (treesit-install-language-grammar lang))))))
+
+  (if (>= emacs-major-version 30)
+      (add-hook 'after-init-hook #'my/ensure-treesit-grammars)
+    (my/ensure-treesit-grammars)))
+
+
+------------------------------------------------------------------------------------------------------------------------------
+(use-package lsp-mode
+  :ensure t
+  :init
+  ;; Optional: Improves performance with massive LSP payloads (common in C++)
+  (setq lsp-log-io nil
+        lsp-keymap-prefix "C-c l"
+        gc-cons-threshold 100000000 ; 100mb
+        read-process-output-max (* 1024 1024)) ; 1mb
+  :hook (;; Hook Rust Tree-sitter Mode
+         (rust-ts-mode . lsp-deferred)
+         ;; Hook C/C++ Tree-sitter Modes
+         (c-ts-mode . lsp-deferred)
+         (c++-ts-mode . lsp-deferred))
+  :commands lsp)
+
+;; Remap standard C/C++ files to use Tree-sitter variants on Fedora
+(use-package c-ts-mode
+  :ensure nil ; Built-in package
+  :mode (("\\.c\\'" . c-ts-mode)
+         ("\\.h\\'" . c-ts-mode)
+         ("\\.cpp\\'" . c++-ts-mode)
+         ("\\.hpp\\'" . c++-ts-mode)
+         ("\\.cc\\'" . c++-ts-mode)))
+
+------------------------------------------------------------------------------------------------------------------------------
+
+
+;; 1. Disable completely useless GUI elements in TTY mode
+(when (not (display-graphic-p))
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1))
+
+;; 2. Enable Mouse Support inside Alacritty
+;; This lets you scroll with your mouse wheel or click to position the cursor
+(xterm-mouse-mode 1)
+
+;; 3. Fix Terminal Clipboard Integration
+;; This syncs the Emacs kill-ring with your system clipboard
+(setq select-enable-clipboard t)
+
+;; 4. Fast Buffer Navigation
+(global-set-key (kbd "M-o") 'other-window) ; Quick switch split panes with Alt+o
+
+------------------------------------------------------------------------------------------------------------------------------
+
+
+;; Set Nushell as the default shell program for Emacs sub-processes
+(setq shell-file-name "nu")
+(setenv "SHELL" shell-file-name)
+
+;; Hook up vterm to specifically invoke Nushell 
+(use-package vterm
+  :ensure t
+  :config
+  (setq vterm-shell "nu"))
+
+------------------------------------------------------------------------------------------------------------------------------
+(use-package nushell-mode
+  :ensure t
+  :mode "\\.nu\\'")
+------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------
