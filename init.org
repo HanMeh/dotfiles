@@ -282,9 +282,51 @@
 ;; alias e='emacs -nw'
 ;; mkdir -p ~/dotfiles/emacs ~/dotfiles/alacritty ~/dotfiles/zellij
 ;; ln -s ~/dotfiles/alacritty ~/.config/alacritty
-;; GNU Stow
+;; GNU Stow      |     chezmoi 
+;; sudo dnf install jetbrains-mono-fonts FiraCode-fonts
+;; sudo dnf install fzf fzf-bash bash-completion ATUIN
+;; sudo ausearch -m AVC -ts recent
+;; sudo dnf install policycoreutils-python-utils setroubleshoot-server
+;; sudo dnf install vulkan-loader vulkan-tools
+;; sudo dnf install mesa-vulkan-drivers
+;; sudo dnf install mesa-vulkan-drivers.x86_64 mesa-vulkan-drivers.i686
+;; vulkaninfo --summary
+;; sudo dnf install vulkan-loader-devel mesa-libGL-devel libX11-devel libXcursor-devel libXrandr-devel libXi-devel
+
  ------------------------------------------------------------------------------------------------------------------------------
-  
+;; minimalist Hyprland setup/squeeze every megabyte of RAM and drop CPU overhead
+;; sudo systemctl disable --now ModemManager.service
+;; sudo systemctl disable --now avahi-daemon.socket avahi-daemon.service
+;; sudo dnf install mako && sudo dnf remove dunst
+;; NAutoVTs=2
+;; sudo sysctl vm.swappiness=10
+;; sudo dnf install btop
+;; alias update-all="sudo dnf upgrade --refresh && flatpak update"
+;; sudo dnf install sddm
+;; sudo systemctl disable --now gdm
+;; sudo systemctl enable --now sddm
+;; sudo dnf copr enable danyasis/ly
+;; sudo dnf install ly
+sudo systemctl disable --now gdm
+sudo systemctl enable --now ly
+;; python3 --version
+;; force Alacritty to use hardware-accelerated OpenGL drivers correctly
+;; alacritty --print-high-performance-gl-info
+
+ ------------------------------------------------------------------------------------------------------------------------------
+;; sudo dnf install git make gcc desktop-file-utils libgccjit-devel \
+  gtk3-devel gnutls-devel libxml2-devel texinfo ncurses-devel
+;;git clone --depth 1 --branch emacs-29 https://gnu.org
+cd emacs
+./autogen.sh
+./configure --with-pgtk --with-native-compilation=yes --with-json --with-tree-sitter CFLAGS="-O3 -march=native"
+make -j$(nproc)
+sudo make install
+;; sudo dnf install alacritty
+mkdir -p ~/.config/zellij
+zellij setup --dump-config > ~/.config/zellij/config.kdl
+
+
 ;; TO DO
 ;; tree-sitter
 ;; lsp |lsp-mode
@@ -1298,6 +1340,27 @@ export EDITOR="emacsclient -t -a ''"
   :ensure t
   :mode "\\.nu\\'")
 ------------------------------------------------------------------------------------------------------------------------------
+
+
+;; =============================================================================
+;; EMACS WAYLAND/HYPRLAND CLIPBOARD INTEGRATION
+;; =============================================================================
+
+(when (and (not (display-graphic-p)) (executable-find "wl-copy"))
+  ;; Pull text from Hyprland global copy clipboard into Emacs
+  (setq interprogram-paste-function
+        (lambda ()
+          (shell-command-to-string "wl-paste --no-newline")))
+  
+  ;; Push text from Emacs copy back up to Hyprland global clipboard
+  (setq interprogram-cut-function
+        (lambda (text &optional push)
+          (let ((process-connection-type nil))
+            (let ((proc (start-process "wl-copy" nil "wl-copy")))
+              (process-send-string proc text)
+              (process-send-eof proc))))))
+
+
 ------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------

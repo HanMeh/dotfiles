@@ -1,0 +1,27 @@
+// =============================================================================
+// ZELLIJ AUTOMATED CODE DEVELOPMENT WORKSPACE LAYOUT
+// =============================================================================
+
+layout {
+    // Top status strip showing active workspaces
+    pane size=1 borderless=true {
+        plugin location="zellij:tab-bar"
+    }
+
+    // Main workspace grid layout
+    pane split_direction="vertical" {
+        // Left Panel: Boots your natively compiled PGTK Emacs instantly in terminal mode
+        pane size="60%" command="emacs" name="   Emacs Core Editor" args=["-nw"]
+        
+        // Right Panel: Split horizontally for system tasks and local development testing
+        pane size="40%" split_direction="horizontal" {
+            pane name=" Terminal Shell"
+            pane name="   Live Compilation Logs / Servers" size="30%"
+        }
+    }
+
+    // Bottom command keybar guide
+    pane size=1 borderless=true {
+        plugin location="zellij:status-bar"
+    }
+}

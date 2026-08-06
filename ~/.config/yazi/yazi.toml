@@ -1,0 +1,57 @@
+[opener]
+emacs = [
+    # -n opens the file asynchronously so Yazi doesn't freeze waiting for you to close it
+    { run = 'emacsclient -n "$@"', desc = "Open in Emacs", block = false }
+]
+
+[open]
+rules = [
+    # Match text files and use the emacs opener
+    { name = "*.txt", use = [ "emacs", "reveal" ] },
+    # Match code files, markdown, json, etc.
+    { mime = "text/*", use = [ "emacs", "reveal" ] },
+    # Fallback catch-all for any files you want to drop into your editor
+    { name = "*", use = [ "emacs", "reveal" ] }
+]
+
+
+----------------------------------
+[opener]
+# Editor rules
+emacs = [
+    { run = 'emacsclient -n "$@"', desc = "Open in Emacs Server", block = false }
+]
+nvim = [
+    { run = 'nvim "$@"', desc = "Open in Neovim", block = true }
+]
+
+# Media rules
+video = [
+    { run = 'mpv "$1"', desc = "Play Video (MPV)", orphan = true, block = false }
+]
+image = [
+    { run = 'sxiv -q "$@"', desc = "View Image", orphan = true, block = false }
+]
+
+# Web/HTML rules
+browser = [
+    { run = 'xdg-open "$1"', desc = "Open in Browser", orphan = true, block = false }
+]
+
+[open]
+rules = [
+    # 1. Match by precise File Extensions
+    { name = "*.html", use = [ "browser", "emacs" ] },
+    { name = "*.json", use = [ "emacs", "nvim" ] },
+
+    # 2. Match by broad MIME types (Highly Recommended)
+    { mime = "text/*", use = [ "emacs", "nvim" ] },
+    { mime = "video/*", use = [ "video" ] },
+    { mime = "image/*", use = [ "image" ] },
+
+    # 3. Match directories (Handy for opening folders in editors)
+    { mime = "inode/directory", use = [ "emacs" ] },
+
+    # 4. Global Fallback Catch-All
+    { name = "*", use = [ "emacs" ] }
+]

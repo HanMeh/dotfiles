@@ -130,3 +130,25 @@ default_shell "nu"
 // Optional: Match your terminal theme or strip duplicate UI elements
 theme "default"
 pane_frames false
+-------------------------------------------------------
+// =============================================================================
+// ZELLIJ PASSTHROUGH INTEGRATION
+// =============================================================================
+
+keybinds {
+    // Forces Zellij to pass raw Alt/Ctrl bindings directly down to Emacs
+    unbind "Alt h" "Alt l" "Alt j" "Alt k"
+    
+    // Switch Zellij into Locked mode via Ctrl+g when you want to use Emacs full-force.
+    // Press Ctrl+g again to unlock Zellij's multi-pane window resizing tools.
+    shared_except "locked" {
+        bind "Ctrl g" { SwitchToMode "Locked"; }
+    }
+    shared_bindings {
+        bind "Ctrl g" { SwitchToMode "Normal"; }
+    }
+}
+
+// Drops heavy UI borders to speed up text drawing performance
+simplified_ui true
+mouse_mode false

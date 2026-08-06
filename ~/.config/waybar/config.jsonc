@@ -1,0 +1,1 @@
+// Limit Waybar Modules: Every hardware poll (like checking battery status or disk space every 1 second) spikes the CPU. Edit your ~/.config/waybar/config.jsonc and increase the interval rate of your modules from 1 to 5 or 10 seconds.

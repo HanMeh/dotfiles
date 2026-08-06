@@ -113,3 +113,58 @@ shell = { program = "zellij" }
 
 [shell]
 program = "/usr/bin/zellij"
+
+
+---------------------------------------------------------------
+[window]
+# Eliminates window decoration overhead under Hyprland
+decorations = "None"
+startup_mode = "Windowed"
+
+[terminal]
+# Disables the flashing cursor animation which triggers unnecessary CPU wakeups
+cursor.style = { shape = "Block", blinking = "Never" }
+
+[performance]
+# Matches your X1 Carbon screen refresh rate exactly to prevent frame tearing
+render_timer = true
+-----------------------------------------------------------------
+[env]
+WINIT_UNIX_BACKEND = "wayland"
+MESA_LOADER_DRIVER_OVERRIDE = "iris"
+__GL_SYNC_TO_VBLANK = "1"
+------------------------------------------------------------------
+# =============================================================================
+# ALACRITTY PERFORMANCE INTEGRATION
+# =============================================================================
+
+[window]
+decorations = "None"
+startup_mode = "Windowed"
+
+[performance]
+render_timer = true
+
+[env]
+WINIT_UNIX_BACKEND = "wayland"
+MESA_LOADER_DRIVER_OVERRIDE = "iris"
+__GL_SYNC_TO_VBLANK = "1"
+
+[terminal]
+cursor.style = { shape = "Block", blinking = "Never" }
+----------------------------------------------------------------------------
+# =============================================================================
+# ALACRITTY FRACTIONAL SCALING FONT CONFIGURATION
+# =============================================================================
+
+[font]
+# Use clean, modern coding fonts designed for scaling grids
+normal = { family = "JetBrains Mono", style = "Regular" }
+bold = { family = "JetBrains Mono", style = "Bold" }
+
+# A base size of 11.0 paired with 1.25 engine scaling results in crisp, 
+# readable text on a 14" high-res screen without blurring.
+size = 11.0
+
+# Slightly increase line spacing to give scaled characters room to breathe
+offset = { x = 0, y = 1 }

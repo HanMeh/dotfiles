@@ -1,0 +1,31 @@
+[manager]
+prepend_keymap = [
+    # Press 'e' to open the highlighted file(s) instantly with Emacs
+    { on = [ "e" ], run = 'open --with=emacs', desc = "Open instantly in Emacs" },
+
+    # Press 'v' to open the highlighted file(s) instantly with Neovim
+    { on = [ "v" ], run = 'open --with=nvim', desc = "Open instantly in Neovim" },
+
+    # Press 'm' to force play a file in MPV (great for videos/audio)
+    { on = [ "m" ], run = 'open --with=video', desc = "Play instantly in MPV" },
+    
+    # Press 'C-e' (Ctrl + e) to open the current folder itself inside Emacs
+    { on = [ "C-e" ], run = 'open --with=emacs --hovered', desc = "Open folder in Emacs" }
+]
+
+
+
+[manager]
+prepend_keymap = [
+    # Press 'e' to open the highlighted file(s) instantly with Emacs
+    { on = [ "e" ], run = 'open --with=emacs', desc = "Open instantly in Emacs" },
+
+    # Press 'v' to open the highlighted file(s) instantly with Neovim
+    { on = [ "v" ], run = 'open --with=nvim', desc = "Open instantly in Neovim" },
+
+    # Press 'm' to force play a file in MPV (great for videos/audio)
+    { on = [ "m" ], run = 'open --with=video', desc = "Play instantly in MPV" },
+    
+    # Press 'C-e' (Ctrl + e) to open the current folder itself inside Emacs
+    { on = [ "C-e" ], run = 'open --with=emacs --hovered', desc = "Open folder in Emacs" }
+]

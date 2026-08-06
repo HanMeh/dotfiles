@@ -87,3 +87,37 @@ shopt -s histappend # Append history instantly instead of overwriting on close
 # 5. Fix Emacs Alt Key Behavior in some terminals
 bind '"\e\e[D": backward-word'
 bind '"\e\e[C": forward-word'
+
+
+
+-----------------------------------------------------------
+
+# =============================================================================
+# HIGH-PERFORMANCE DEVELOPER BASH CONFIGURATION
+# =============================================================================
+
+# 1. Enable Global Tab Completions & Fuzzy Finder Loops
+if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+fi
+source /usr/share/fzf/shell/key-bindings.bash
+source /usr/share/fzf/shell/completion.bash
+
+# 2. Initialize Atuin (Rust History Search)
+if command -v atuin &> /dev/null; then
+    eval "$(atuin init bash)"
+fi
+
+# 3. Optimized Compiler and Tool Flags for Your X1 Carbon CPU
+export CFLAGS="-O3 -march=native"
+export CXXFLAGS="-O3 -march=native"
+
+# 4. Power Programmer Shortcuts (Aliases)
+alias ls='ls --color=auto -F'
+alias grep='grep --color=auto'
+alias update-all='sudo dnf upgrade --refresh && flatpak update'
+alias vverify='sudo dnf verify'
+alias e='emacs -nw'
+
+
+-----------------------------------------------------------
