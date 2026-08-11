@@ -1,1 +1,30 @@
 // Limit Waybar Modules: Every hardware poll (like checking battery status or disk space every 1 second) spikes the CPU. Edit your ~/.config/waybar/config.jsonc and increase the interval rate of your modules from 1 to 5 or 10 seconds.
+{
+    "layer": "top",
+    "position": "top",
+    "height": 32,
+    "spacing": 4,
+    "modules-left": ["hyprland/workspaces"],
+    "modules-center": ["hyprland/window"],
+    "modules-right": ["pulseaudio", "clock"],
+
+    "hyprland/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "format": "{name}"
+    },
+    "hyprland/window": {
+        "format": "{title}",
+        "max-length": 40,
+        "separate-outputs": true
+    },
+    "clock": {
+        "format": "{:%I:%M %p}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "pulseaudio": {
+        "format": "Vol: {volume}%",
+        "format-muted": "Muted",
+        "on-click": "pavucontrol"
+    }
+}
