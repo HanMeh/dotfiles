@@ -292,7 +292,7 @@
 ;; sudo dnf install mesa-vulkan-drivers.x86_64 mesa-vulkan-drivers.i686
 ;; vulkaninfo --summary
 ;; sudo dnf install vulkan-loader-devel mesa-libGL-devel libX11-devel libXcursor-devel libXrandr-devel libXi-devel
-
+;; Disable the DNF Automatic Sync Timer
  ------------------------------------------------------------------------------------------------------------------------------
 ;; minimalist Hyprland setup/squeeze every megabyte of RAM and drop CPU overhead
 ;; sudo systemctl disable --now ModemManager.service
@@ -1362,9 +1362,60 @@ export EDITOR="emacsclient -t -a ''"
 
 
 ------------------------------------------------------------------------------------------------------------------------------
+
+(use-package lsp-mode
+  :ensure t
+  :hook (rust-mode . lsp-deferred)
+  :bind (:map lsp-mode-map
+              ("C-c a" . lsp-execute-code-action))
+  :config
+  ;; Enable the visual "Lightbulb" sidebar indicator when a quick-fix is ready
+  (setq lsp-modeline-code-actions-enable t))
+
+
+
 ------------------------------------------------------------------------------------------------------------------------------
+;; --- ADVANCED MEMORY & RAM OPTIMIZATION ---
+
+;; Increase memory threshold during startup to make it faster
+(setq gc-cons-threshold (* 50 1024 1024)) 
+
+;; Install and configure GCMH (Garbage Collector Magic Hack)
+;; This runs GC automatically in the background only when your computer goes idle,
+;; preventing Emacs from hoarding RAM or stuttering while you type.
+(use-package gcmh
+  :ensure t
+  :init
+  (gcmh-mode 1))
+
+;; Fix PGTK rendering leak by cleaning up the font-cache regularly
+(setq inquisitor-font-cache-expiry 60)
+
 ------------------------------------------------------------------------------------------------------------------------------
+
+(use-package alert
+  :ensure t
+  :init
+  ;; Force Emacs to use the native Linux desktop notifier (Dunst)
+  (setq alert-default-style 'libnotify))
+
+
 ------------------------------------------------------------------------------------------------------------------------------
+(with-eval-after-load 'lsp-mode
+  ;; Notify when an LSP server initializes and is ready for code completion
+  (add-hook 'lsp-after-initialize-hook
+            (lambda ()
+              (alert "Language server is fully initialized and active."
+                     :title "LSP Mode"
+                     :severity 'low)))
+
+  ;; Notify immediately if an LSP server crashes or disconnects unexpectedly
+  (add-hook 'lsp-uninitialized-hook
+            (lambda ()
+              (alert "Warning: Language server has disconnected or crashed!"
+                     :title "🚨 LSP Failure"
+                     :severity 'urgent))))
+
 ------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------

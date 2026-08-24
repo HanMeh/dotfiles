@@ -34,3 +34,38 @@ window#waybar {
 #pulseaudio {
     color: #a6e3a1;
 }
+
+
+/* Default styling for the RAM icon/text */
+#memory {
+    background-color: #24283b; /* Dark theme background */
+    color: #a9b1d6;            /* Neutral text color */
+    border-radius: 4px;
+    padding: 0 10px;
+    margin: 0 4px;
+}
+
+/* Styling when RAM usage crosses 70% */
+#memory.warning {
+    background-color: #e0af68; /* Amber Yellow */
+    color: #1a1b26;            /* Dark text for contrast */
+}
+
+/* Styling and flashing animation when RAM usage crosses 85% */
+#memory.critical {
+    background-color: #f7768e; /* Vivid Red */
+    color: #ffffff;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+/* CSS Keyframes for the critical blinking alert effect */
+@keyframes blink {
+    to {
+        background-color: #1a1b26;
+        color: #f7768e;
+    }
+}

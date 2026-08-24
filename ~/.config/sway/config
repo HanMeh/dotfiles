@@ -1,0 +1,16 @@
+# Assign Alacritty to always open on Workspace 1
+assign [app_id="Alacritty"] workspace 1
+
+# Automatically launch Alacritty on system startup
+exec alacritty
+
+# Make Alacritty take up the entire screen on Workspace 1
+for_window [app_id="Alacritty"] fullscreen enable
+
+
+
+# Example for a desktop setup
+output * mode 2560x1440@144Hz
+
+# Add the following line to bind the script to Super + Alt + R
+bindsym $mod+Mod1+r exec sudo /usr/local/bin/sway-ram-fix.sh

@@ -55,3 +55,16 @@ rules = [
     # 4. Global Fallback Catch-All
     { name = "*", use = [ "emacs" ] }
 ]
+
+
+
+[opener]
+emacs = [
+    { run = 'emacsclient -nw "$@"', block = true, desc = "Open in Emacs (Terminal)" },
+    { run = 'emacsclient -c "$@"', orphan = true, desc = "Open in Emacs (GUI)" }
+]
+
+[open]
+rules = [
+    { name = "*", use = "emacs" }
+]
