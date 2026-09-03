@@ -121,3 +121,20 @@ alias e='emacs -nw'
 
 
 -----------------------------------------------------------
+alias ide="zellij --layout coder"
+
+---------------------------------------------------------
+# Quick Bluetooth connection for your favorite headphones
+alias connect-buds="bluetoothctl connect 00:11:22:33:44:55"
+
+# Quick check on network status
+alias wifi-scan="nmcli device wifi list"
+
+------------------------------------------------------
+# Append your local bin directory to your system PATH if it isn't there already
+export PATH="$HOME/.local/bin:$PATH"
+
+# Safe trash alternatives
+alias tp="trash.sh"                            # Type 'tp' to "trash point" a file safely
+alias trash-list="ls -la ~/.local/share/trash" # Quickly see what is sitting in your trash bin
+--------------------------------------------------------------

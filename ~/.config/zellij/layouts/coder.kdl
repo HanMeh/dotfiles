@@ -1,0 +1,25 @@
+layout {
+    // Top bar showing open tabs and system information
+    pane size=1 borderless=true {
+        plugin location="zellij:tab-bar"
+    }
+
+    // Main workspace split vertically
+    pane split_direction="vertical" {
+        // Left Side: File Explorer (takes up 20% of screen width)
+        pane size="20%" name="Files" {
+            command "yazi"
+        }
+        
+        // Right Side: Code Editor (takes up 80% of screen width)
+        pane size="80%" name="Editor" focus=true {
+            command "emacs"
+            args "-nw" // Forces Emacs to open inside the terminal pane instead of a GUI window
+        }
+    }
+
+    // Bottom status bar showing Zellij keyboard shortcuts
+    pane size=1 borderless=true {
+        plugin location="zellij:status-bar"
+    }
+}

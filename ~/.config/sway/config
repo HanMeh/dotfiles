@@ -14,3 +14,8 @@ output * mode 2560x1440@144Hz
 
 # Add the following line to bind the script to Super + Alt + R
 bindsym $mod+Mod1+r exec sudo /usr/local/bin/sway-ram-fix.sh
+
+# Permanent Monitor Configurations
+output DP-1 mode 2560x1440@144Hz position 0 0 scale 1
+output eDP-1 mode 1920x1080@60Hz position 0 1440 transform normal
+

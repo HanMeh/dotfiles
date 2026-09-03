@@ -312,6 +312,23 @@ sudo systemctl enable --now ly
 ;; python3 --version
 ;; force Alacritty to use hardware-accelerated OpenGL drivers correctly
 ;; alacritty --print-high-performance-gl-info
+;; sudo dnf remove sssd
+;; sudo dnf remove PackageKit gnome-software
+;; sudo dnf remove abrt
+;; sudo dnf remove libreoffice*
+;; sudo dnf remove fedora-media-writer
+;; sudo dnf remove gnome-connections gnome-contacts gnome-maps gnome-weather gnome-tour
+;; sudo tuned-adm profile throughput-performance
+;; sudo dnf remove gnome-software packagekit packagekit-cached-metadata -y
+;; sudo dnf remove nautilus gnome-terminal gedit gnome-system-monitor gnome-calculator evince -y
+;; open allacritty and run sudo dnf remove gnome-shell
+;; flatpak uninstall --all -y    |   flatpak uninstall --unused -y   |    sudo dnf remove flatpak -y    |    rm -rf ~/.local/share/flatpak      sudo rm -rf /var/lib/flatpak
+;; sudo dnf install ly -y    |    sudo systemctl disable gdm && sudo systemctl enable ly
+;; sudo dnf remove gdm -y
+
+
+
+
 
  ------------------------------------------------------------------------------------------------------------------------------
 ;; sudo dnf install git make gcc desktop-file-utils libgccjit-devel \
@@ -376,6 +393,17 @@ zellij setup --dump-config > ~/.config/zellij/config.kdl
 ;; ;; REMOVE OR COMMENT OUT THESE LINES IF THEY EXIST:
 ;; ;; (server-start)
 ;; ;; (require 'server)
+;; sudo dnf install terminus-fonts-console -y
+;; sudo dnf install borgbackup -y
+;; sudo systemctl disable --now cups.service avahi-daemon.socket avahi-daemon.service pcscd.service pcscd.socket geoclue.service gnome-remote-desktop.service
+sudo systemctl disable --now packagekit.service
+sudo systemctl mask packagekit.service
+systemctl --user mask tracker-miner-fs-3.service tracker-extract-3.service
+systemctl --user stop tracker-miner-fs-3.service tracker-extract-3.service
+sudo systemctl disable --now bluetooth.service
+Edit /etc/selinux/config → SELINUX=disabled.Run systemctl disable --now auditd
+Run systemctl disable --now irqbalance
+sudo systemctl disable --now cups.service avahi-daemon.service sssd.service abrtd.service
 
  ------------------------------------------------------------------------------------------------------------------------------
   
@@ -1416,6 +1444,31 @@ export EDITOR="emacsclient -t -a ''"
                      :title "🚨 LSP Failure"
                      :severity 'urgent))))
 
+------------------------------------------------------------------------------------------------------------------------------
+
+(use-package yazi
+  :ensure t
+  :bind (("C-c f" . yazi)) ; Binds Yazi to Ctrl+C followed by F
+  :config
+  (setq yazi-show-hidden-files t))
+
+------------------------------------------------------------------------------------------------------------------------------
+
+(defun open-yazi-here ()
+  "Launch Yazi file manager in an embedded terminal pane."
+  (interactive)
+  (let ((buf (ansi-term "/usr/bin/yazi" "Yazi")))
+    (switch-to-buffer buf)))
+
+;; Bind it to an easy key combination
+(global-set-key (kbd "C-c y") 'open-yazi-here)
+
+------------------------------------------------------------------------------------------------------------------------------
+(use-package docker
+  :ensure t
+  :bind ("C-c d" . docker))
+------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,48 @@
+# Yazi ANSI-Synced Flavor Theme Configuration
+
+[manager]
+# Column Borders and Panes
+border_style = { fg = "blue" }
+
+# Current Selected Highlight Hover Line
+hovered = { fg = "black", bg = "blue", bold = true }
+
+# Visual Block Selection Mode Highlights
+preview_hovered = { fg = "black", bg = "cyan" }
+
+[filetype]
+# Sync File Ext and Directory Visual Colors to Terminal Accents
+rules = [
+	{ name = "*/", fg = "blue", bold = true },          # Directories
+	{ mime = "text/*", fg = "green" },                  # Code/Text Files
+	{ mime = "image/*", fg = "magenta" },               # Images
+	{ mime = "video/*", fg = "magenta" },               # Videos
+	{ mime = "application/zip", fg = "red" },            # Compressed Archives
+	{ mime = "application/x-tar", fg = "red" },
+	{ name = "*", fg = "white" }                        # Catch-all basic files
+]
+
+[status]
+# Bottom Status Bar Formatting
+separator_style = { fg = "black", bg = "black" }
+
+# Mode Colors (Normal, Select, Input)
+mode_normal = { fg = "black", bg = "blue", bold = true }
+mode_select = { fg = "black", bg = "magenta", bold = true }
+mode_unset  = { fg = "white", bg = "black" }
+
+# Right side information alignment
+permissions = { fg = "yellow" }
+
+[input]
+# Pop-up prompt boxes (e.g., when renaming a file)
+border   = { fg = "blue" }
+title    = { fg = "white" }
+value    = { fg = "white" }
+selected = { bg = "magenta" }
+
+[select]
+# Context selection menus
+border   = { fg = "blue" }
+active   = { fg = "magenta", bold = true }
+inactive = { fg = "white" }

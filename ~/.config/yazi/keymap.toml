@@ -29,3 +29,7 @@ prepend_keymap = [
     # Press 'C-e' (Ctrl + e) to open the current folder itself inside Emacs
     { on = [ "C-e" ], run = 'open --with=emacs --hovered', desc = "Open folder in Emacs" }
 ]
+
+
+
+--------------------------------------------

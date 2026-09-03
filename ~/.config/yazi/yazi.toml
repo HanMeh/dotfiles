@@ -68,3 +68,34 @@ emacs = [
 rules = [
     { name = "*", use = "emacs" }
 ]
+
+
+
+------------------------------------
+[manager]
+show_hidden = true
+show_symlink = true
+
+[plugin]
+# Ensures icon themes load natively over the ANSI color framework
+preload = []
+
+
+
+---------------------------------------------------
+[opener]
+# Tells Yazi to open the selected file using your active terminal-mode Emacs buffer
+emacs-edit = [
+	{ run = 'emacs -nw "$@"', block = true, desc = "Edit in Emacs" }
+]
+
+[open]
+rules = [
+	# Direct all coding language extensions to the Emacs execution rule
+	{ mime = "text/*", use = "emacs-edit" },
+	{ name = "*.json", use = "emacs-edit" },
+	{ name = "*.toml", use = "emacs-edit" },
+	{ name = "*.kdl",  use = "emacs-edit" },
+	{ name = "*.yaml", use = "emacs-edit" },
+	{ name = "*.yml",  use = "emacs-edit" }
+]

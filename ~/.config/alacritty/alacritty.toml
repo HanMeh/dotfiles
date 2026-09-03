@@ -230,3 +230,90 @@ white   = "0xa6adc8"
 
 [shell]
 program = "zellij"
+
+
+# global theme syncs
+# Example Alacritty palette hook
+[colors.primary]
+background = "0x24283b"
+foreground = "0xc0caf5"
+
+
+
+# ==============================================================================
+# ALACRITTY CORE WINDOW & LAYOUT CONFIGURATION
+# ==============================================================================
+
+[window]
+# Remove interior padding to keep your text grids perfectly square and aligned
+padding = { x = 0, y = 0 }
+# Force the application to boot borderless; Hyprland will draw structural borders
+decorations = "None"
+# Launch terminal windows with a standard initial sizing block matrix
+dimensions = { columns = 120, lines = 34 }
+
+# ==============================================================================
+# TYPOGRAPHY & FONT CONFIGURATION
+# ==============================================================================
+
+[font]
+# Map your vector-based Terminus Nerd Font for clean coding text and icons
+normal = { family = "TerminusNerdFont", style = "Regular" }
+bold = { family = "TerminusNerdFont", style = "Bold" }
+italic = { family = "TerminusNerdFont", style = "Italic" }
+
+# Base font scale. Adjust this value up or down depending on your screen density
+size = 12.0
+
+# Injects 1 extra vertical pixel between text rows to enhance code readability
+offset = { x = 0, y = 1 }
+
+# ==============================================================================
+# UNIFIED TOKYO NIGHT STORM COLOR PALETTE
+# ==============================================================================
+
+[colors.primary]
+background = "#24283b" # Moody, deep cyberpunk blue canvas backplate
+foreground = "#c0caf5" # Soft white-blue text foreground string tint
+
+[colors.cursor]
+text = "#24283b"
+cursor = "#c0caf5"
+
+[colors.selection]
+text = "CellForeground"
+background = "#364a82" # Dark blue-purple selection highlight block
+
+# Normal ANSI Color Register Map (Utilized by Yazi & Zellij themes)
+[colors.normal]
+black   = "#1d202f"
+red     = "#f7768e" # Error states, zip files, deletion warnings
+green   = "#9ece6a" # Code buffers, text files, active confirmation messages
+yellow  = "#e0af68" # Directory warnings, permissions arrays
+blue    = "#7aa2f7" # Standard folders, focus layout lines, active prompts
+magenta = "#bb9af7" # Media objects, custom hooks, selections
+cyan    = "#7dcfff" # Alternative indicators, helper overlays
+white   = "#a9b1d6"
+
+# Bright ANSI Color Variant Map (Enhanced contrast elements)
+[colors.bright]
+black   = "#414868"
+red     = "#f7768e"
+green   = "#9ece6a"
+yellow  = "#e0af68"
+blue    = "#7aa2f7"
+magenta = "#bb9af7"
+cyan    = "#7dcfff"
+white   = "#c0caf5"
+
+# ==============================================================================
+# TERMINAL INTERACTIVE INTERFACE RULES
+# ==============================================================================
+
+[cursor]
+# Locks cursor behavior to a solid, stationary block for classic TUI feel
+style = { shape = "Block", blinking = "Off" }
+
+[scrolling]
+# Stores 10,000 lines of historical console text outputs in your system memory
+history = 10000
