@@ -317,3 +317,13 @@ style = { shape = "Block", blinking = "Off" }
 [scrolling]
 # Stores 10,000 lines of historical console text outputs in your system memory
 history = 10000
+
+
+----------------------------------------
+[env]
+WINIT_UNIX_BACKEND = "wayland"
+
+
+---------------------------
+[terminal]
+shell = { program = "C:\\Program Files\\Git\\bin\\bash.exe", args = ["--login"] }

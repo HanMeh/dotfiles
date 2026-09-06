@@ -138,3 +138,16 @@ export PATH="$HOME/.local/bin:$PATH"
 alias tp="trash.sh"                            # Type 'tp' to "trash point" a file safely
 alias trash-list="ls -la ~/.local/share/trash" # Quickly see what is sitting in your trash bin
 --------------------------------------------------------------
+
+
+# Define XDG Base Directory paths
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+
+---------------------
+# Custom network toggles for offline coding
+alias codemode="~/.local/bin/toggle-net.sh"
+alias darkmode="~/.local/bin/toggle-net.sh"

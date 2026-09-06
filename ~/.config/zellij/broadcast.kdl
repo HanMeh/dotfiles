@@ -1,0 +1,17 @@
+layout {
+    // Top pane: This is what you look at to control the presentation
+    pane size="75%" name="Presentation Screen" command="presenterm" {
+        args "slides.md"
+    }
+    
+    // Bottom split into notes and the background tunnel status
+    row size="25%" {
+        pane size="65%" name="Speaker Notes" command="presenterm" {
+            args "slides.md" "--presenter-notes"
+        }
+        pane size="35%" name="Live Tunnel Stream Status" command="bash" {
+            // This runs the local web server and opens the public tunnel
+            args "-c" "ttyd -R -p 7681 zellij attach -s presentation-session & sleep 1 && ssh -R 80:localhost:7681 localhost.run"
+        }
+    }
+}

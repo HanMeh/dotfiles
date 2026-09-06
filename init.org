@@ -325,6 +325,11 @@ sudo systemctl enable --now ly
 ;; flatpak uninstall --all -y    |   flatpak uninstall --unused -y   |    sudo dnf remove flatpak -y    |    rm -rf ~/.local/share/flatpak      sudo rm -rf /var/lib/flatpak
 ;; sudo dnf install ly -y    |    sudo systemctl disable gdm && sudo systemctl enable ly
 ;; sudo dnf remove gdm -y
+# 1. Remove the default graphical applications group
+sudo dnf groupremove "Sway Desktop Application Group"
+
+# 2. Clean up any leftover, unused dependencies
+sudo dnf autoremove
 
 
 
@@ -404,6 +409,9 @@ sudo systemctl disable --now bluetooth.service
 Edit /etc/selinux/config → SELINUX=disabled.Run systemctl disable --now auditd
 Run systemctl disable --now irqbalance
 sudo systemctl disable --now cups.service avahi-daemon.service sssd.service abrtd.service
+;; echo $XDG_CONFIG_HOME
+;; sudo dnf install emacs-nox
+;; sudo dnf install wl-clipboard
 
  ------------------------------------------------------------------------------------------------------------------------------
   
@@ -1468,7 +1476,29 @@ export EDITOR="emacsclient -t -a ''"
   :ensure t
   :bind ("C-c d" . docker))
 ------------------------------------------------------------------------------------------------------------------------------
+;; Enable system clipboard integration in the terminal under Wayland
+(unless (display-graphic-p)
+  (when (executable-find "wl-copy")
+    (setq interprogram-cut-function
+          (lambda (text)
+            (let ((process-connection-type nil))
+              (let ((proc (start-process "wl-copy" nil "wl-copy")))
+                (process-send-string proc text)
+                (process-send-eof proc))))))
+
+  (when (executable-find "wl-paste")
+    (setq interprogram-paste-function
+          (lambda ()
+            (if (and (boundp 'wl-copy-process) wl-copy-process)
+                nil ; Avoid pasting what we just copied
+              (let ((text (shell-command-to-string "wl-paste -n")))
+                (unless (string= text "") text)))))))
+
 ------------------------------------------------------------------------------------------------------------------------------
+(use-package clipetty
+  :ensure t
+  :hook (after-init . global-clipetty-mode))
+
 ------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------
